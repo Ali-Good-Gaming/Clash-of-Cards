@@ -30,7 +30,9 @@
             font-family: 'Exo 2', sans-serif;
             background-color: var(--dark-bg);
             /* ФОН: Если картинки нет, будет красивый градиент */
-            background-image: url('background.png'), linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            /* Обратите внимание: для CSS путь к фону задается отдельно, 
+               если фон тоже в папке, измените путь ниже на 'Assets 2026-01-22/background.png' */
+            background-image: url('Assets 2026-01-22/background.png'), linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
             background-size: cover;
             background-position: center;
             background-attachment: fixed;
@@ -708,9 +710,12 @@
        3. ДАННЫЕ И ЛОГИКА ИГРЫ
        ========================================= */
     
-    // Генерируем массив имен файлов 1.png ... 50.png
-    const CARD_ASSETS = Array.from({length: 50}, (_, i) => `${i + 1}.png`);
-    const BACK_IMAGE = 'card.png'; 
+    // Путь к папке с ресурсами
+    const ASSETS_PATH = 'Assets 2026-01-22/';
+
+    // Генерируем массив имен файлов 1.png ... 50.png с учетом пути
+    const CARD_ASSETS = Array.from({length: 50}, (_, i) => `${ASSETS_PATH}${i + 1}.png`);
+    const BACK_IMAGE = `${ASSETS_PATH}card.png`; 
 
     const game = {
         state: {
