@@ -5,24 +5,27 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Clash of Cards - Найди пару</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800;900&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary-color: #6a11cb;
-            --secondary-color: #2575fc;
-            --accent-color: #ff416c;
-            --dark-color: #1a1a2e;
+            --primary-color: #0c0c14;
+            --secondary-color: #1a1a2e;
+            --accent-gold: #FFD700;
+            --accent-gold-dark: #B8860B;
+            --accent-blue: #2575fc;
             --light-color: #f8f9fa;
-            --success-color: #4CAF50;
-            --warning-color: #ff9800;
-            --card-width: 100px;
-            --card-height: 140px;
+            --dark-color: #0a0a12;
+            --card-bg: rgba(15, 15, 25, 0.9);
+            --menu-bg: rgba(10, 10, 18, 0.5);
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --card-width: 90px;
+            --card-height: 126px;
         }
 
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
         body {
@@ -30,16 +33,21 @@
             color: var(--light-color);
             min-height: 100vh;
             overflow-x: hidden;
-            background-image: url('background.png');
+            background-image: url('cards/background.png');
             background-size: cover;
             background-attachment: fixed;
             background-position: center;
+            font-family: 'Rajdhani', sans-serif;
+            font-weight: 500;
         }
 
         .container {
             max-width: 1200px;
             margin: 0 auto;
             padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
         }
 
         /* Главный экран */
@@ -47,151 +55,223 @@
             display: none;
             opacity: 0;
             transition: opacity 0.5s ease;
-            min-height: 80vh;
+            flex: 1;
             padding: 20px;
             border-radius: 20px;
-            background: rgba(26, 26, 46, 0.85);
-            backdrop-filter: blur(10px);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            background: var(--menu-bg);
+            backdrop-filter: blur(20px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(255, 215, 0, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .screen::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, transparent, var(--accent-gold), transparent);
+            z-index: 1;
         }
 
         .screen.active {
-            display: block;
+            display: flex;
+            flex-direction: column;
             opacity: 1;
-            animation: fadeIn 0.5s forwards;
+            animation: fadeInUp 0.6s forwards;
         }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* Заголовки и текст */
+        @keyframes glow {
+            0% { box-shadow: 0 0 10px rgba(255, 215, 0, 0.3); }
+            50% { box-shadow: 0 0 25px rgba(255, 215, 0, 0.6); }
+            100% { box-shadow: 0 0 10px rgba(255, 215, 0, 0.3); }
+        }
+
+        /* Заголовки */
         .title {
             text-align: center;
-            font-size: 4rem;
+            font-size: 4.5rem;
             margin-bottom: 10px;
-            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 900;
+            background: linear-gradient(45deg, var(--accent-gold), #FFA500, var(--accent-gold));
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
-            text-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-            animation: titleGlow 3s infinite alternate;
+            text-shadow: 0 5px 25px rgba(255, 215, 0, 0.3);
+            letter-spacing: 2px;
+            position: relative;
+            padding-bottom: 15px;
         }
 
-        @keyframes titleGlow {
-            0% { filter: drop-shadow(0 0 5px rgba(106, 17, 203, 0.5)); }
-            100% { filter: drop-shadow(0 0 15px rgba(37, 117, 252, 0.7)); }
+        .title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 200px;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, var(--accent-gold), transparent);
         }
 
         .subtitle {
             text-align: center;
-            font-size: 1.5rem;
+            font-size: 1.4rem;
             margin-bottom: 40px;
             color: #aaa;
+            font-weight: 500;
+            letter-spacing: 1px;
+            text-transform: uppercase;
         }
 
         /* Кнопки */
         .btn {
-            display: inline-block;
-            padding: 15px 30px;
-            background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
-            color: white;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 16px 32px;
+            background: linear-gradient(135deg, var(--accent-gold-dark), var(--accent-gold));
+            color: var(--dark-color);
             border: none;
-            border-radius: 50px;
-            font-size: 1.2rem;
-            font-weight: bold;
+            border-radius: 12px;
+            font-size: 1.3rem;
+            font-weight: 700;
             cursor: pointer;
-            transition: all 0.3s ease;
-            margin: 10px;
+            transition: var(--transition);
+            margin: 8px;
             position: relative;
             overflow: hidden;
             z-index: 1;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 8px 20px rgba(255, 215, 0, 0.2);
+            min-width: 180px;
+            font-family: 'Rajdhani', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
 
         .btn:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 12px 30px rgba(255, 215, 0, 0.4);
+            background: linear-gradient(135deg, var(--accent-gold), #FFEC8B);
         }
 
         .btn:active {
             transform: translateY(-2px);
         }
 
-        .btn:before {
+        .btn::before {
             content: '';
             position: absolute;
             top: 0;
             left: -100%;
             width: 100%;
             height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
             transition: left 0.7s;
             z-index: -1;
         }
 
-        .btn:hover:before {
+        .btn:hover::before {
             left: 100%;
         }
 
         .btn-small {
-            padding: 8px 20px;
-            font-size: 1rem;
+            padding: 10px 24px;
+            font-size: 1.1rem;
+            min-width: 140px;
         }
 
         .btn-back {
-            position: fixed;
-            top: 20px;
-            left: 20px;
+            position: absolute;
+            top: 25px;
+            left: 25px;
             z-index: 100;
-            background: rgba(0, 0, 0, 0.5);
-            border: 2px solid var(--primary-color);
+            background: rgba(10, 10, 18, 0.8);
+            color: var(--accent-gold);
+            border: 2px solid var(--accent-gold);
+            padding: 10px 20px;
+            min-width: auto;
+            font-size: 1.1rem;
         }
 
         .btn-back:hover {
-            background: rgba(106, 17, 203, 0.3);
+            background: rgba(255, 215, 0, 0.1);
         }
 
         /* Игровое поле */
-        .game-info {
+        .game-header {
             display: flex;
-            justify-content: space-between;
+            justify-content: center;
             align-items: center;
-            margin-bottom: 20px;
-            padding: 15px;
-            background: rgba(0, 0, 0, 0.3);
-            border-radius: 10px;
+            margin-bottom: 25px;
+            padding: 20px;
+            background: rgba(10, 10, 18, 0.7);
+            border-radius: 15px;
+            border: 1px solid rgba(255, 215, 0, 0.2);
+            position: relative;
+            min-height: 80px;
         }
 
         .stats {
             display: flex;
-            gap: 20px;
+            align-items: center;
+            gap: 40px;
         }
 
         .stat {
             display: flex;
             flex-direction: column;
             align-items: center;
+            padding: 10px 25px;
+            background: rgba(255, 215, 0, 0.1);
+            border-radius: 10px;
+            border: 1px solid rgba(255, 215, 0, 0.2);
+            min-width: 180px;
         }
 
         .stat-value {
-            font-size: 2rem;
-            font-weight: bold;
-            color: var(--primary-color);
+            font-size: 2.8rem;
+            font-weight: 700;
+            color: var(--accent-gold);
+            font-family: 'Montserrat', sans-serif;
+            line-height: 1;
         }
 
         .stat-label {
-            font-size: 0.9rem;
+            font-size: 1rem;
             color: #aaa;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 5px;
+        }
+
+        .game-actions {
+            position: absolute;
+            right: 25px;
+            display: flex;
+            gap: 15px;
         }
 
         .game-board {
             display: grid;
-            gap: 10px;
+            gap: 12px;
             justify-content: center;
-            margin: 30px 0;
+            margin: 0 auto;
             perspective: 1000px;
+            max-width: 100%;
+            padding: 15px;
+            background: rgba(10, 10, 18, 0.5);
+            border-radius: 15px;
+            border: 1px solid rgba(255, 215, 0, 0.1);
         }
 
         /* Карточки */
@@ -200,10 +280,11 @@
             height: var(--card-height);
             position: relative;
             transform-style: preserve-3d;
-            transition: transform 0.6s;
+            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
             cursor: pointer;
-            border-radius: 10px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
         }
 
         .card.flipped {
@@ -212,7 +293,12 @@
 
         .card.matched {
             transform: rotateY(180deg);
-            box-shadow: 0 0 15px var(--success-color);
+            animation: matchedGlow 1.5s infinite alternate;
+        }
+
+        @keyframes matchedGlow {
+            0% { box-shadow: 0 0 15px rgba(255, 215, 0, 0.5); }
+            100% { box-shadow: 0 0 30px rgba(255, 215, 0, 0.8); }
         }
 
         .card-front, .card-back {
@@ -220,134 +306,280 @@
             width: 100%;
             height: 100%;
             backface-visibility: hidden;
-            border-radius: 10px;
+            border-radius: 8px;
             display: flex;
             justify-content: center;
             align-items: center;
         }
 
         .card-front {
-            background-color: var(--light-color);
+            background: linear-gradient(145deg, #1a1a2e, #16213e);
             transform: rotateY(180deg);
             overflow: hidden;
+            padding: 5px;
         }
 
         .card-back {
-            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
-            color: white;
-            font-size: 2rem;
+            background-color: transparent;
+            background-image: url('cards/card.png');
+            background-size: cover;
+            background-position: center;
+            border: 2px solid rgba(255, 215, 0, 0.3);
+        }
+
+        .card-back::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(10, 10, 18, 0.3);
+            border-radius: 6px;
         }
 
         .card-image {
-            width: 90%;
-            height: 90%;
+            width: 100%;
+            height: 100%;
             object-fit: contain;
+            border-radius: 6px;
         }
 
-        /* Настройки и выбор режима */
-        .mode-selection, .settings-grid, .cards-selection {
+        /* Выбор режима */
+        .mode-selection {
             display: flex;
             flex-wrap: wrap;
             justify-content: center;
-            gap: 20px;
+            gap: 30px;
             margin: 40px 0;
+            flex: 1;
+            align-content: center;
         }
 
-        .mode-option, .setting-option, .card-option {
-            background: rgba(0, 0, 0, 0.3);
-            border-radius: 15px;
-            padding: 20px;
-            width: 300px;
+        .mode-option {
+            background: rgba(15, 15, 25, 0.8);
+            border-radius: 20px;
+            padding: 40px 30px;
+            width: 320px;
             text-align: center;
-            transition: all 0.3s ease;
+            transition: var(--transition);
             border: 2px solid transparent;
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(10px);
         }
 
-        .mode-option:hover, .setting-option:hover, .card-option:hover {
-            transform: translateY(-10px);
-            border-color: var(--primary-color);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        .mode-option::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--accent-gold), var(--accent-blue));
         }
 
-        .mode-icon, .setting-icon {
-            font-size: 3rem;
+        .mode-option:hover {
+            transform: translateY(-10px) scale(1.02);
+            border-color: var(--accent-gold);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4), 0 0 30px rgba(255, 215, 0, 0.2);
+        }
+
+        .mode-icon {
+            font-size: 3.5rem;
+            margin-bottom: 25px;
+            color: var(--accent-gold);
+            height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .mode-title {
+            font-size: 2rem;
             margin-bottom: 15px;
-            color: var(--primary-color);
+            color: var(--accent-gold);
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
 
-        .mode-title, .setting-title {
-            font-size: 1.5rem;
-            margin-bottom: 10px;
-        }
-
-        .mode-description, .setting-description {
+        .mode-description {
             color: #aaa;
-            margin-bottom: 20px;
+            margin-bottom: 30px;
+            font-size: 1.1rem;
+            line-height: 1.5;
+            min-height: 80px;
         }
 
         /* Таблица рекордов */
-        .records-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 30px 0;
-            background: rgba(0, 0, 0, 0.3);
-            border-radius: 10px;
-            overflow: hidden;
+        .records-container {
+            background: rgba(15, 15, 25, 0.8);
+            border-radius: 15px;
+            padding: 30px;
+            margin: 20px 0;
+            border: 1px solid rgba(255, 215, 0, 0.2);
         }
 
-        .records-table th, .records-table td {
-            padding: 15px;
-            text-align: left;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        .records-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            margin: 30px 0;
+            background: rgba(10, 10, 18, 0.6);
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 215, 0, 0.1);
         }
 
         .records-table th {
-            background: rgba(106, 17, 203, 0.5);
-            color: white;
+            background: linear-gradient(135deg, var(--accent-gold-dark), var(--accent-gold));
+            color: var(--dark-color);
+            padding: 20px;
+            text-align: center;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 1.1rem;
+        }
+
+        .records-table td {
+            padding: 18px 20px;
+            text-align: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            color: #ddd;
+            font-size: 1.1rem;
+        }
+
+        .records-table tr:nth-child(even) {
+            background: rgba(255, 215, 0, 0.03);
         }
 
         .records-table tr:hover {
-            background: rgba(255, 255, 255, 0.05);
+            background: rgba(255, 215, 0, 0.08);
+        }
+
+        .records-table tr:last-child td {
+            border-bottom: none;
         }
 
         /* Настройки */
+        .settings-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+            margin: 40px 0;
+        }
+
+        .setting-option {
+            background: rgba(15, 15, 25, 0.8);
+            border-radius: 20px;
+            padding: 30px;
+            transition: var(--transition);
+            border: 1px solid rgba(255, 215, 0, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .setting-option:hover {
+            border-color: var(--accent-gold);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .setting-icon {
+            font-size: 2.8rem;
+            margin-bottom: 20px;
+            color: var(--accent-gold);
+        }
+
+        .setting-title {
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            color: var(--accent-gold);
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 700;
+        }
+
+        .setting-description {
+            color: #aaa;
+            margin-bottom: 25px;
+            font-size: 1.1rem;
+        }
+
         .slider-container {
-            margin: 20px 0;
+            margin: 25px 0;
         }
 
         .slider-label {
             display: flex;
             justify-content: space-between;
-            margin-bottom: 5px;
+            margin-bottom: 12px;
+            color: #ddd;
+            font-weight: 600;
         }
 
         .slider {
             width: 100%;
             height: 10px;
             -webkit-appearance: none;
-            appearance: none;
-            background: rgba(255, 255, 255, 0.1);
+            background: rgba(255, 215, 0, 0.1);
             border-radius: 5px;
             outline: none;
+            border: 1px solid rgba(255, 215, 0, 0.3);
         }
 
         .slider::-webkit-slider-thumb {
             -webkit-appearance: none;
-            appearance: none;
-            width: 20px;
-            height: 20px;
+            width: 24px;
+            height: 24px;
             border-radius: 50%;
-            background: var(--primary-color);
+            background: var(--accent-gold);
             cursor: pointer;
+            border: 3px solid var(--dark-color);
+            box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+        }
+
+        /* Язык */
+        .language-selector {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .lang-btn {
+            flex: 1;
+            padding: 12px;
+            background: rgba(255, 215, 0, 0.1);
+            border: 2px solid rgba(255, 215, 0, 0.3);
+            border-radius: 10px;
+            color: #ddd;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: var(--transition);
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+
+        .lang-btn:hover {
+            background: rgba(255, 215, 0, 0.2);
+            border-color: var(--accent-gold);
+        }
+
+        .lang-btn.active {
+            background: var(--accent-gold);
+            color: var(--dark-color);
+            border-color: var(--accent-gold);
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.5);
         }
 
         /* Соцсети */
         .social-links {
             display: flex;
             justify-content: center;
-            gap: 20px;
+            gap: 25px;
             margin-top: 40px;
-            padding-top: 20px;
+            padding-top: 30px;
             border-top: 1px solid rgba(255, 255, 255, 0.1);
         }
 
@@ -355,19 +587,20 @@
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            width: 50px;
-            height: 50px;
+            width: 60px;
+            height: 60px;
             border-radius: 50%;
-            background: rgba(0, 0, 0, 0.3);
-            color: white;
-            font-size: 1.5rem;
-            transition: all 0.3s ease;
+            background: linear-gradient(135deg, var(--accent-gold-dark), var(--accent-gold));
+            color: var(--dark-color);
+            font-size: 1.8rem;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
         }
 
         .social-link:hover {
-            transform: translateY(-5px);
-            background: var(--primary-color);
-            box-shadow: 0 5px 15px rgba(106, 17, 203, 0.4);
+            transform: translateY(-5px) rotate(5deg);
+            box-shadow: 0 10px 20px rgba(255, 215, 0, 0.4);
         }
 
         /* Модальное окно */
@@ -378,7 +611,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.8);
+            background: rgba(10, 10, 18, 0.95);
             z-index: 1000;
             justify-content: center;
             align-items: center;
@@ -392,86 +625,214 @@
         }
 
         .modal-content {
-            background: rgba(26, 26, 46, 0.95);
-            padding: 30px;
-            border-radius: 20px;
+            background: linear-gradient(145deg, #1a1a2e, #16213e);
+            padding: 40px;
+            border-radius: 25px;
             max-width: 500px;
             width: 90%;
             text-align: center;
-            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.5);
-            transform: scale(0.9);
-            animation: modalAppear 0.3s forwards;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+            border: 2px solid var(--accent-gold);
+            position: relative;
+            overflow: hidden;
         }
 
-        @keyframes modalAppear {
-            to { transform: scale(1); }
+        .modal-content::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--accent-gold), var(--accent-blue), var(--accent-gold));
         }
 
         .modal-title {
-            font-size: 2rem;
+            font-size: 2.5rem;
             margin-bottom: 20px;
-            color: var(--primary-color);
+            color: var(--accent-gold);
+            font-family: 'Montserrat', sans-serif;
         }
 
         .modal-input {
             width: 100%;
-            padding: 15px;
-            margin: 15px 0;
-            border-radius: 10px;
-            border: 2px solid var(--primary-color);
-            background: rgba(0, 0, 0, 0.3);
+            padding: 18px;
+            margin: 20px 0;
+            border-radius: 12px;
+            border: 2px solid var(--accent-gold);
+            background: rgba(10, 10, 18, 0.8);
             color: white;
-            font-size: 1.2rem;
+            font-size: 1.3rem;
+            text-align: center;
+            font-family: 'Rajdhani', sans-serif;
+        }
+
+        .modal-input:focus {
+            outline: none;
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
+        }
+
+        /* Хинт анимация */
+        @keyframes hintPulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        .card.hint {
+            animation: hintPulse 0.5s infinite, glow 1.5s infinite alternate;
+            z-index: 10;
         }
 
         /* Адаптивность */
+        @media (max-width: 1100px) {
+            .game-board {
+                gap: 10px;
+            }
+            
+            .card {
+                width: 80px;
+                height: 112px;
+            }
+        }
+
         @media (max-width: 768px) {
             .title {
-                font-size: 2.5rem;
+                font-size: 3rem;
             }
             
             .subtitle {
                 font-size: 1.2rem;
             }
             
-            .game-board {
-                gap: 8px;
+            .mode-option {
+                width: 100%;
+                padding: 30px 20px;
             }
             
-            .card {
-                width: 80px;
-                height: 110px;
+            .settings-grid {
+                grid-template-columns: 1fr;
             }
             
-            .stats {
-                flex-wrap: wrap;
+            .game-header {
+                flex-direction: column;
+                gap: 20px;
+                padding: 20px;
+            }
+            
+            .game-actions {
+                position: static;
                 justify-content: center;
             }
             
-            .mode-option, .setting-option, .card-option {
-                width: 100%;
+            .stats {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .stat {
+                min-width: 250px;
+            }
+            
+            .game-board {
+                gap: 8px;
+                padding: 10px;
+            }
+            
+            .card {
+                width: 70px;
+                height: 98px;
+            }
+            
+            .btn {
+                min-width: 160px;
+                padding: 14px 28px;
             }
         }
 
-        /* Анимации для карт */
-        @keyframes cardMatch {
-            0% { transform: rotateY(180deg) scale(1); }
-            50% { transform: rotateY(180deg) scale(1.1); }
-            100% { transform: rotateY(180deg) scale(1); }
+        @media (max-width: 480px) {
+            .container {
+                padding: 10px;
+            }
+            
+            .screen {
+                padding: 15px;
+            }
+            
+            .title {
+                font-size: 2.5rem;
+            }
+            
+            .card {
+                width: 65px;
+                height: 91px;
+            }
+            
+            .stat-value {
+                font-size: 2.2rem;
+            }
+            
+            .btn {
+                min-width: 140px;
+                padding: 12px 24px;
+                font-size: 1.1rem;
+            }
         }
 
-        .matched .card-front {
-            animation: cardMatch 0.5s ease;
+        /* Главное меню контент */
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px 0;
         }
 
-        /* Хинт анимация */
-        @keyframes hintGlow {
-            0% { box-shadow: 0 0 5px var(--warning-color); }
-            100% { box-shadow: 0 0 20px var(--warning-color); }
+        /* Выбор количества пар */
+        .cards-selection {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 25px;
+            margin: 40px 0;
         }
 
-        .card.hint {
-            animation: hintGlow 0.8s infinite alternate;
+        .card-option {
+            background: rgba(15, 15, 25, 0.8);
+            border-radius: 20px;
+            padding: 30px;
+            width: 280px;
+            text-align: center;
+            transition: var(--transition);
+            border: 2px solid transparent;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card-option:hover {
+            transform: translateY(-8px);
+            border-color: var(--accent-gold);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .custom-slider {
+            margin-top: 20px;
+        }
+
+        .custom-slider input[type="range"] {
+            width: 100%;
+            margin: 15px 0;
+        }
+
+        /* Анимация появления карт */
+        @keyframes cardAppear {
+            from { opacity: 0; transform: scale(0.8) rotateY(90deg); }
+            to { opacity: 1; transform: scale(1) rotateY(0deg); }
+        }
+
+        .card {
+            animation: cardAppear 0.5s ease-out;
         }
     </style>
 </head>
@@ -479,28 +840,31 @@
     <div class="container">
         <!-- Главное меню -->
         <div id="main-screen" class="screen active">
-            <h1 class="title">Clash of Cards</h1>
-            <p class="subtitle">from ALI_Good_Gaming</p>
+            <button class="btn btn-back" onclick="showScreen('main-screen')" style="display: none;"><i class="fas fa-arrow-left"></i></button>
+            <h1 class="title">CLASH OF CARDS</h1>
+            <p class="subtitle">FROM ALI_GOOD_GAMING</p>
             
-            <div class="mode-selection">
-                <div class="mode-option">
-                    <div class="mode-icon"><i class="fas fa-chess-board"></i></div>
-                    <h3 class="mode-title">Классический</h3>
-                    <p class="mode-description">Найдите все пары карт. Выбирайте количество пар и играйте в своём темпе.</p>
-                    <button class="btn" onclick="showScreen('classic-screen')">Играть</button>
+            <div class="main-content">
+                <div class="mode-selection">
+                    <div class="mode-option">
+                        <div class="mode-icon"><i class="fas fa-crown"></i></div>
+                        <h3 class="mode-title">Классический</h3>
+                        <p class="mode-description">Найдите все пары карт в расслабленном темпе</p>
+                        <button class="btn" onclick="showScreen('classic-screen')">Играть</button>
+                    </div>
+                    
+                    <div class="mode-option">
+                        <div class="mode-icon"><i class="fas fa-clock"></i></div>
+                        <h3 class="mode-title">На время</h3>
+                        <p class="mode-description">Соревнуйтесь со временем, чтобы попасть в таблицу рекордов</p>
+                        <button class="btn" onclick="showScreen('timed-screen')">Играть</button>
+                    </div>
                 </div>
                 
-                <div class="mode-option">
-                    <div class="mode-icon"><i class="fas fa-stopwatch"></i></div>
-                    <h3 class="mode-title">На время</h3>
-                    <p class="mode-description">Соревнуйтесь со временем! Находите пары как можно быстрее, чтобы попасть в таблицу рекордов.</p>
-                    <button class="btn" onclick="showScreen('timed-screen')">Играть</button>
+                <div style="margin-top: 30px; display: flex; gap: 15px;">
+                    <button class="btn" onclick="showScreen('records-screen')"><i class="fas fa-trophy"></i> Рекорды</button>
+                    <button class="btn" onclick="showScreen('settings-screen')"><i class="fas fa-cog"></i> Настройки</button>
                 </div>
-            </div>
-            
-            <div class="mode-selection">
-                <button class="btn" onclick="showScreen('records-screen')"><i class="fas fa-trophy"></i> Рекорды</button>
-                <button class="btn" onclick="showScreen('settings-screen')"><i class="fas fa-cog"></i> Настройки</button>
             </div>
             
             <div class="social-links">
@@ -516,42 +880,42 @@
             </div>
         </div>
         
-        <!-- Экран выбора карт для классического режима -->
+        <!-- Классический режим -->
         <div id="classic-screen" class="screen">
             <button class="btn btn-back" onclick="showScreen('main-screen')"><i class="fas fa-arrow-left"></i> Назад</button>
-            <h2 class="title">Классический режим</h2>
-            <p class="subtitle">Выберите количество пар карт для игры</p>
+            <h2 class="title">КЛАССИЧЕСКИЙ</h2>
+            <p class="subtitle">Выберите размер поля</p>
             
             <div class="cards-selection">
                 <div class="card-option">
-                    <div class="mode-icon"><i class="fas fa-th"></i></div>
-                    <h3 class="mode-title">4x4 (8 пар)</h3>
-                    <p class="mode-description">Игровое поле 4x4, 8 пар карт. Идеально для быстрой игры.</p>
+                    <div class="mode-icon"><i class="fas fa-chess-board"></i></div>
+                    <h3 class="mode-title">4×4</h3>
+                    <p class="mode-description">8 пар карт<br>Легкий уровень</p>
                     <button class="btn" onclick="startGame(8, 'classic')">Играть</button>
                 </div>
                 
                 <div class="card-option">
                     <div class="mode-icon"><i class="fas fa-th-large"></i></div>
-                    <h3 class="mode-title">6x5 (15 пар)</h3>
-                    <p class="mode-description">Игровое поле 6x5, 15 пар карт. Средний уровень сложности.</p>
+                    <h3 class="mode-title">6×5</h3>
+                    <p class="mode-description">15 пар карт<br>Средний уровень</p>
                     <button class="btn" onclick="startGame(15, 'classic')">Играть</button>
                 </div>
                 
                 <div class="card-option">
                     <div class="mode-icon"><i class="fas fa-border-all"></i></div>
-                    <h3 class="mode-title">10x5 (25 пар)</h3>
-                    <p class="mode-description">Игровое поле 10x5, 25 пар карт. Максимальная сложность.</p>
+                    <h3 class="mode-title">10×5</h3>
+                    <p class="mode-description">25 пар карт<br>Сложный уровень</p>
                     <button class="btn" onclick="startGame(25, 'classic')">Играть</button>
                 </div>
                 
                 <div class="card-option">
                     <div class="mode-icon"><i class="fas fa-sliders-h"></i></div>
-                    <h3 class="mode-title">Свои настройки</h3>
-                    <p class="mode-description">Выберите количество пар от 4 до 25.</p>
-                    <div style="margin-top: 15px;">
-                        <input type="range" id="custom-pairs" min="4" max="25" value="12" style="width: 100%;">
-                        <div style="display: flex; justify-content: space-between; margin-top: 10px;">
-                            <span id="pairs-value">12 пар</span>
+                    <h3 class="mode-title">Настроить</h3>
+                    <p class="mode-description">Выберите количество пар</p>
+                    <div class="custom-slider">
+                        <input type="range" id="custom-pairs" min="4" max="25" value="12">
+                        <div style="display: flex; justify-content: space-between; margin-top: 15px;">
+                            <span id="pairs-value" style="color: var(--accent-gold); font-weight: 600;">12 пар</span>
                             <button class="btn btn-small" onclick="startCustomGame('classic')">Играть</button>
                         </div>
                     </div>
@@ -559,42 +923,42 @@
             </div>
         </div>
         
-        <!-- Экран выбора карт для режима на время -->
+        <!-- Режим на время -->
         <div id="timed-screen" class="screen">
             <button class="btn btn-back" onclick="showScreen('main-screen')"><i class="fas fa-arrow-left"></i> Назад</button>
-            <h2 class="title">Режим на время</h2>
-            <p class="subtitle">Соревнуйтесь со временем! Выберите количество пар карт</p>
+            <h2 class="title">НА ВРЕМЯ</h2>
+            <p class="subtitle">Выберите уровень сложности</p>
             
             <div class="cards-selection">
                 <div class="card-option">
-                    <div class="mode-icon"><i class="fas fa-th"></i></div>
-                    <h3 class="mode-title">4x4 (8 пар)</h3>
-                    <p class="mode-description">Игровое поле 4x4, 8 пар карт. Быстрая игра на время.</p>
+                    <div class="mode-icon"><i class="fas fa-bolt"></i></div>
+                    <h3 class="mode-title">Быстрый</h3>
+                    <p class="mode-description">8 пар карт<br>До 2 минут</p>
                     <button class="btn" onclick="startGame(8, 'timed')">Играть</button>
                 </div>
                 
                 <div class="card-option">
-                    <div class="mode-icon"><i class="fas fa-th-large"></i></div>
-                    <h3 class="mode-title">6x5 (15 пар)</h3>
-                    <p class="mode-description">Игровое поле 6x5, 15 пар карт. Средний уровень сложности.</p>
+                    <div class="mode-icon"><i class="fas fa-running"></i></div>
+                    <h3 class="mode-title">Средний</h3>
+                    <p class="mode-description">15 пар карт<br>До 4 минут</p>
                     <button class="btn" onclick="startGame(15, 'timed')">Играть</button>
                 </div>
                 
                 <div class="card-option">
-                    <div class="mode-icon"><i class="fas fa-border-all"></i></div>
-                    <h3 class="mode-title">10x5 (25 пар)</h3>
-                    <p class="mode-description">Игровое поле 10x5, 25 пар карт. Максимальная сложность.</p>
+                    <div class="mode-icon"><i class="fas fa-skull-crossbones"></i></div>
+                    <h3 class="mode-title">Эксперт</h3>
+                    <p class="mode-description">25 пар карт<br>До 6 минут</p>
                     <button class="btn" onclick="startGame(25, 'timed')">Играть</button>
                 </div>
                 
                 <div class="card-option">
                     <div class="mode-icon"><i class="fas fa-sliders-h"></i></div>
-                    <h3 class="mode-title">Свои настройки</h3>
-                    <p class="mode-description">Выберите количество пар от 4 до 25.</p>
-                    <div style="margin-top: 15px;">
-                        <input type="range" id="custom-pairs-timed" min="4" max="25" value="12" style="width: 100%;">
-                        <div style="display: flex; justify-content: space-between; margin-top: 10px;">
-                            <span id="pairs-value-timed">12 пар</span>
+                    <h3 class="mode-title">Настроить</h3>
+                    <p class="mode-description">Выберите количество пар</p>
+                    <div class="custom-slider">
+                        <input type="range" id="custom-pairs-timed" min="4" max="25" value="12">
+                        <div style="display: flex; justify-content: space-between; margin-top: 15px;">
+                            <span id="pairs-value-timed" style="color: var(--accent-gold); font-weight: 600;">12 пар</span>
                             <button class="btn btn-small" onclick="startCustomGame('timed')">Играть</button>
                         </div>
                     </div>
@@ -606,98 +970,97 @@
         <div id="game-screen" class="screen">
             <button class="btn btn-back" onclick="returnToModeSelection()"><i class="fas fa-arrow-left"></i> Назад</button>
             
-            <div class="game-info">
+            <div class="game-header">
                 <div class="stats">
-                    <div class="stat">
-                        <div class="stat-value" id="moves">0</div>
-                        <div class="stat-label">Ходы</div>
-                    </div>
                     <div class="stat">
                         <div class="stat-value" id="pairs-found">0</div>
                         <div class="stat-label">Найдено пар</div>
+                    </div>
+                    <div class="stat" id="total-pairs-stat">
+                        <div class="stat-value" id="total-pairs">0</div>
+                        <div class="stat-label">Всего пар</div>
                     </div>
                     <div class="stat" id="timer-container">
                         <div class="stat-value" id="timer">00:00</div>
                         <div class="stat-label">Время</div>
                     </div>
-                    <div class="stat">
-                        <div class="stat-value" id="total-pairs">0</div>
-                        <div class="stat-label">Всего пар</div>
-                    </div>
                 </div>
                 
-                <div>
-                    <button class="btn" id="hint-btn" onclick="useHint()"><i class="fas fa-lightbulb"></i> Подсказка</button>
-                    <button class="btn" onclick="restartGame()"><i class="fas fa-redo"></i> Новая игра</button>
+                <div class="game-actions">
+                    <button class="btn" id="hint-btn" onclick="useHint()"><i class="fas fa-lightbulb"></i> Подсказка <span id="hint-count">(3)</span></button>
+                    <button class="btn" onclick="restartGame()"><i class="fas fa-redo"></i> Заново</button>
                 </div>
             </div>
             
             <div id="game-board" class="game-board"></div>
             
-            <div style="text-align: center; margin-top: 30px;">
+            <div style="text-align: center; margin-top: 25px; color: #aaa; font-size: 1.1rem;">
                 <div id="game-mode-label"></div>
             </div>
         </div>
         
-        <!-- Экран рекордов -->
+        <!-- Рекорды -->
         <div id="records-screen" class="screen">
             <button class="btn btn-back" onclick="showScreen('main-screen')"><i class="fas fa-arrow-left"></i> Назад</button>
-            <h2 class="title">Таблица рекордов</h2>
+            <h2 class="title">РЕКОРДЫ</h2>
             <p class="subtitle">Лучшие результаты в режиме "На время"</p>
             
-            <div style="margin: 20px 0; text-align: center;">
-                <button class="btn" onclick="clearRecords()"><i class="fas fa-trash"></i> Очистить рекорды</button>
+            <div class="records-container">
+                <div style="text-align: center; margin-bottom: 20px;">
+                    <button class="btn" onclick="clearRecords()"><i class="fas fa-trash"></i> Очистить рекорды</button>
+                </div>
+                
+                <table class="records-table">
+                    <thead>
+                        <tr>
+                            <th>Место</th>
+                            <th>Имя</th>
+                            <th>Время</th>
+                            <th>Пар</th>
+                            <th>Дата</th>
+                        </tr>
+                    </thead>
+                    <tbody id="records-body">
+                        <!-- Рекорды загружаются из localStorage -->
+                    </tbody>
+                </table>
             </div>
-            
-            <table class="records-table" id="records-table">
-                <thead>
-                    <tr>
-                        <th>Место</th>
-                        <th>Имя</th>
-                        <th>Время</th>
-                        <th>Пар</th>
-                        <th>Дата</th>
-                    </tr>
-                </thead>
-                <tbody id="records-body">
-                    <!-- Записи будут загружены из localStorage -->
-                </tbody>
-            </table>
-            
-            <p style="text-align: center; margin-top: 20px; color: #aaa;">Рекорды сохраняются в вашем браузере</p>
         </div>
         
-        <!-- Экран настроек -->
+        <!-- Настройки -->
         <div id="settings-screen" class="screen">
             <button class="btn btn-back" onclick="showScreen('main-screen')"><i class="fas fa-arrow-left"></i> Назад</button>
-            <h2 class="title">Настройки</h2>
+            <h2 class="title">НАСТРОЙКИ</h2>
             <p class="subtitle">Настройте игру под себя</p>
             
             <div class="settings-grid">
                 <div class="setting-option">
-                    <div class="setting-icon"><i class="fas fa-palette"></i></div>
-                    <h3 class="setting-title">Фон</h3>
-                    <p class="setting-description">Настройте яркость и прозрачность фона</p>
+                    <div class="setting-icon"><i class="fas fa-image"></i></div>
+                    <h3 class="setting-title">Внешний вид</h3>
+                    <p class="setting-description">Настройте яркость и прозрачность интерфейса</p>
+                    
                     <div class="slider-container">
                         <div class="slider-label">
-                            <span>Яркость</span>
+                            <span>Яркость фона</span>
                             <span id="brightness-value">100%</span>
                         </div>
-                        <input type="range" min="10" max="100" value="100" class="slider" id="brightness-slider" onchange="updateBrightness()">
+                        <input type="range" min="20" max="100" value="100" class="slider" id="brightness-slider" onchange="updateBrightness()">
                     </div>
+                    
                     <div class="slider-container">
                         <div class="slider-label">
-                            <span>Прозрачность</span>
-                            <span id="opacity-value">85%</span>
+                            <span>Прозрачность меню</span>
+                            <span id="opacity-value">50%</span>
                         </div>
-                        <input type="range" min="10" max="100" value="85" class="slider" id="opacity-slider" onchange="updateOpacity()">
+                        <input type="range" min="20" max="80" value="50" class="slider" id="opacity-slider" onchange="updateOpacity()">
                     </div>
                 </div>
                 
                 <div class="setting-option">
                     <div class="setting-icon"><i class="fas fa-volume-up"></i></div>
                     <h3 class="setting-title">Звук</h3>
-                    <p class="setting-description">Настройте звуковые эффекты</p>
+                    <p class="setting-description">Настройте звуковые эффекты игры</p>
+                    
                     <div class="slider-container">
                         <div class="slider-label">
                             <span>Громкость</span>
@@ -705,25 +1068,22 @@
                         </div>
                         <input type="range" min="0" max="100" value="70" class="slider" id="volume-slider" onchange="updateVolume()">
                     </div>
-                    <div style="margin-top: 20px;">
-                        <button class="btn btn-small" onclick="toggleSound()" id="sound-toggle">
-                            <i class="fas fa-volume-up"></i> Вкл/Выкл звук
+                    
+                    <div style="margin-top: 25px;">
+                        <button class="btn" onclick="toggleSound()" id="sound-toggle">
+                            <i class="fas fa-volume-up"></i> Звук включен
                         </button>
                     </div>
                 </div>
                 
                 <div class="setting-option">
-                    <div class="setting-icon"><i class="fas fa-language"></i></div>
+                    <div class="setting-icon"><i class="fas fa-globe"></i></div>
                     <h3 class="setting-title">Язык</h3>
                     <p class="setting-description">Выберите язык интерфейса</p>
-                    <div style="margin-top: 20px;">
-                        <select id="language-select" style="width: 100%; padding: 10px; border-radius: 10px; background: rgba(0, 0, 0, 0.3); color: white; border: 1px solid var(--primary-color);">
-                            <option value="ru">Русский</option>
-                            <option value="en">English</option>
-                        </select>
-                    </div>
-                    <div style="margin-top: 20px;">
-                        <button class="btn btn-small" onclick="changeLanguage()">Применить</button>
+                    
+                    <div class="language-selector">
+                        <button class="lang-btn active" data-lang="ru" onclick="changeLanguage('ru')">Русский</button>
+                        <button class="lang-btn" data-lang="en" onclick="changeLanguage('en')">English</button>
                     </div>
                 </div>
             </div>
@@ -742,23 +1102,24 @@
         </div>
     </div>
     
-    <!-- Модальное окно для ввода имени при завершении игры -->
+    <!-- Модальное окно завершения игры -->
     <div id="game-over-modal" class="modal">
         <div class="modal-content">
-            <h2 class="modal-title">Поздравляем!</h2>
-            <p>Вы нашли все пары карт!</p>
-            <div style="font-size: 1.5rem; margin: 20px 0;">
+            <h2 class="modal-title">ПОБЕДА!</h2>
+            <p style="font-size: 1.3rem; margin-bottom: 20px;">Вы нашли все пары карт!</p>
+            
+            <div style="font-size: 1.8rem; margin: 30px 0; color: var(--accent-gold);">
                 <div>Время: <span id="final-time">00:00</span></div>
-                <div>Ходы: <span id="final-moves">0</span></div>
+                <div>Найдено: <span id="final-pairs">0</span> из <span id="final-total-pairs">0</span> пар</div>
             </div>
             
             <div id="name-input-container">
-                <p>Введите ваше имя для таблицы рекордов:</p>
+                <p style="font-size: 1.2rem; margin-bottom: 15px;">Введите ваше имя для таблицы рекордов:</p>
                 <input type="text" id="player-name" class="modal-input" placeholder="Ваше имя" maxlength="20">
-                <button class="btn" onclick="saveRecord()">Сохранить рекорд</button>
+                <button class="btn" onclick="saveRecord()" style="margin-top: 20px;">Сохранить рекорд</button>
             </div>
             
-            <div style="margin-top: 20px;">
+            <div style="display: flex; gap: 15px; margin-top: 30px;">
                 <button class="btn" onclick="closeModal()">Закрыть</button>
                 <button class="btn" onclick="restartGame()">Новая игра</button>
             </div>
@@ -773,29 +1134,117 @@
             matchedPairs: 0,
             totalPairs: 0,
             moves: 0,
-            gameMode: 'classic', // 'classic' или 'timed'
+            gameMode: 'classic',
             timer: 0,
             timerInterval: null,
             canFlip: true,
             hints: 3,
             soundEnabled: true,
-            volume: 0.7
+            volume: 0.7,
+            firstCard: null
         };
         
-        // Настройки из localStorage
+        // Тексты для разных языков
+        const texts = {
+            ru: {
+                title: "CLASH OF CARDS",
+                subtitle: "FROM ALI_GOOD_GAMING",
+                classic: "КЛАССИЧЕСКИЙ",
+                timed: "НА ВРЕМЯ",
+                records: "РЕКОРДЫ",
+                settings: "НАСТРОЙКИ",
+                play: "Играть",
+                back: "Назад",
+                pairsFound: "Найдено пар",
+                totalPairs: "Всего пар",
+                time: "Время",
+                hint: "Подсказка",
+                restart: "Заново",
+                chooseSize: "Выберите размер поля",
+                chooseDifficulty: "Выберите уровень сложности",
+                bestResults: "Лучшие результаты в режиме \"На время\"",
+                customize: "Настройте игру под себя",
+                appearance: "Внешний вид",
+                sound: "Звук",
+                language: "Язык",
+                brightness: "Яркость фона",
+                opacity: "Прозрачность меню",
+                volume: "Громкость",
+                soundOn: "Звук включен",
+                soundOff: "Звук выключен",
+                clearRecords: "Очистить рекорды",
+                victory: "ПОБЕДА!",
+                allPairsFound: "Вы нашли все пары карт!",
+                enterName: "Введите ваше имя для таблицы рекордов:",
+                saveRecord: "Сохранить рекорд",
+                close: "Закрыть",
+                newGame: "Новая игра",
+                easy: "Легкий уровень",
+                medium: "Средний уровень",
+                hard: "Сложный уровень",
+                fast: "До 2 минут",
+                normal: "До 4 минут",
+                expert: "До 6 минут",
+                customizePairs: "Выберите количество пар"
+            },
+            en: {
+                title: "CLASH OF CARDS",
+                subtitle: "FROM ALI_GOOD_GAMING",
+                classic: "CLASSIC",
+                timed: "TIMED",
+                records: "RECORDS",
+                settings: "SETTINGS",
+                play: "Play",
+                back: "Back",
+                pairsFound: "Pairs Found",
+                totalPairs: "Total Pairs",
+                time: "Time",
+                hint: "Hint",
+                restart: "Restart",
+                chooseSize: "Choose board size",
+                chooseDifficulty: "Choose difficulty level",
+                bestResults: "Best results in \"Timed\" mode",
+                customize: "Customize the game",
+                appearance: "Appearance",
+                sound: "Sound",
+                language: "Language",
+                brightness: "Background brightness",
+                opacity: "Menu opacity",
+                volume: "Volume",
+                soundOn: "Sound on",
+                soundOff: "Sound off",
+                clearRecords: "Clear records",
+                victory: "VICTORY!",
+                allPairsFound: "You found all pairs!",
+                enterName: "Enter your name for the leaderboard:",
+                saveRecord: "Save record",
+                close: "Close",
+                newGame: "New game",
+                easy: "Easy level",
+                medium: "Medium level",
+                hard: "Hard level",
+                fast: "Up to 2 minutes",
+                normal: "Up to 4 minutes",
+                expert: "Up to 6 minutes",
+                customizePairs: "Choose number of pairs"
+            }
+        };
+        
+        // Настройки
         let settings = {
             brightness: 100,
-            opacity: 85,
+            opacity: 50,
             volume: 70,
             soundEnabled: true,
             language: 'ru'
         };
         
-        // Инициализация игры при загрузке
+        // Инициализация игры
         document.addEventListener('DOMContentLoaded', function() {
             loadSettings();
             updateSliders();
             loadRecords();
+            updateLanguage();
             
             // Обработчики для ползунков
             document.getElementById('custom-pairs').addEventListener('input', function() {
@@ -808,28 +1257,30 @@
             
             // Установка фона
             updateBackground();
+            
+            // Начальный размер карточек
+            updateCardSize();
         });
         
         // Функции экранов
         function showScreen(screenId) {
-            // Скрыть все экраны
             document.querySelectorAll('.screen').forEach(screen => {
                 screen.classList.remove('active');
             });
             
-            // Показать выбранный экран
             document.getElementById(screenId).classList.add('active');
             
-            // Остановить таймер, если он запущен
             if (gameState.timerInterval) {
                 clearInterval(gameState.timerInterval);
                 gameState.timerInterval = null;
             }
             
-            // Если показываем экран рекордов, обновляем таблицу
             if (screenId === 'records-screen') {
                 loadRecords();
             }
+            
+            // Обновляем язык при смене экрана
+            updateLanguage();
         }
         
         // Начать игру
@@ -837,7 +1288,7 @@
             gameState.totalPairs = pairsCount;
             gameState.gameMode = mode;
             
-            // Определяем размер сетки в зависимости от количества пар
+            // Определяем размер сетки
             let rows, cols;
             if (pairsCount <= 8) {
                 rows = 4;
@@ -850,8 +1301,13 @@
                 cols = 10;
             }
             
+            // Обновляем размер карточек в зависимости от количества
+            updateCardSize(pairsCount);
+            
             // Устанавливаем размер игрового поля
-            document.getElementById('game-board').style.gridTemplateColumns = `repeat(${cols}, 1fr)`;
+            const gameBoard = document.getElementById('game-board');
+            gameBoard.style.gridTemplateColumns = `repeat(${cols}, 1fr)`;
+            gameBoard.style.gridTemplateRows = `repeat(${rows}, 1fr)`;
             
             // Сбрасываем состояние игры
             resetGameState();
@@ -863,14 +1319,18 @@
             updateGameInfo();
             
             // Устанавливаем метку режима
-            document.getElementById('game-mode-label').textContent = 
-                mode === 'classic' ? 'Классический режим' : 'Режим на время';
+            const modeLabel = document.getElementById('game-mode-label');
+            if (mode === 'classic') {
+                modeLabel.textContent = 'Классический режим';
+            } else {
+                modeLabel.textContent = 'Режим на время';
+            }
             
-            // Показываем или скрываем таймер в зависимости от режима
+            // Показываем или скрываем таймер
             document.getElementById('timer-container').style.display = 
-                mode === 'timed' ? 'block' : 'none';
+                mode === 'timed' ? 'flex' : 'none';
             
-            // Если режим на время, запускаем таймер
+            // Запускаем таймер для режима на время
             if (mode === 'timed') {
                 startTimer();
             }
@@ -888,26 +1348,40 @@
             startGame(pairsCount, mode);
         }
         
+        // Обновить размер карточек
+        function updateCardSize(pairsCount = 8) {
+            const root = document.documentElement;
+            
+            if (pairsCount <= 8) {
+                // 4x4
+                root.style.setProperty('--card-width', '90px');
+                root.style.setProperty('--card-height', '126px');
+            } else if (pairsCount <= 15) {
+                // 6x5
+                root.style.setProperty('--card-width', '80px');
+                root.style.setProperty('--card-height', '112px');
+            } else {
+                // 10x5
+                root.style.setProperty('--card-width', '70px');
+                root.style.setProperty('--card-height', '98px');
+            }
+        }
+        
         // Создать карты
         function createCards(pairsCount) {
-            // Очищаем игровое поле
             const gameBoard = document.getElementById('game-board');
             gameBoard.innerHTML = '';
             
             // Создаем массив карт (номера от 1 до 50)
             const availableCards = Array.from({length: 50}, (_, i) => i + 1);
             
-            // Выбираем случайные карты для игры
+            // Выбираем случайные карты
             const selectedCards = [];
             for (let i = 0; i < pairsCount; i++) {
-                // Берем случайную карту из доступных
                 const randomIndex = Math.floor(Math.random() * availableCards.length);
                 const cardId = availableCards[randomIndex];
-                
-                // Удаляем выбранную карту из доступных, чтобы не повторяться
                 availableCards.splice(randomIndex, 1);
                 
-                // Добавляем две одинаковые карты (пару)
                 selectedCards.push(cardId);
                 selectedCards.push(cardId);
             }
@@ -924,22 +1398,20 @@
                 
                 card.innerHTML = `
                     <div class="card-front">
-                        <img src="${cardId}.png" alt="Card ${cardId}" class="card-image">
+                        <img src="cards/${cardId}.png" alt="Card ${cardId}" class="card-image">
                     </div>
-                    <div class="card-back">
-                        <i class="fas fa-question"></i>
-                    </div>
+                    <div class="card-back"></div>
                 `;
                 
                 card.addEventListener('click', () => flipCard(card));
                 gameBoard.appendChild(card);
                 
-                // Сохраняем ссылку на карту в состоянии игры
                 gameState.cards.push({
                     element: card,
                     id: cardId,
                     flipped: false,
-                    matched: false
+                    matched: false,
+                    index: index
                 });
             });
         }
@@ -955,29 +1427,27 @@
         
         // Перевернуть карту
         function flipCard(cardElement) {
-            // Проверяем, можно ли переворачивать карты
             if (!gameState.canFlip) return;
             
             const cardIndex = parseInt(cardElement.dataset.index);
             const card = gameState.cards[cardIndex];
             
-            // Если карта уже перевернута или совпала, игнорируем
             if (card.flipped || card.matched) return;
             
-            // Переворачиваем карту
+            // Сохраняем первую перевернутую карту
+            if (gameState.flippedCards.length === 0) {
+                gameState.firstCard = card;
+            }
+            
             cardElement.classList.add('flipped');
             card.flipped = true;
             gameState.flippedCards.push(card);
             
-            // Воспроизводим звук
             playSound('flip');
             
             // Если перевернуто две карты, проверяем на совпадение
             if (gameState.flippedCards.length === 2) {
                 gameState.moves++;
-                updateGameInfo();
-                
-                // Проверяем совпадение
                 checkForMatch();
             }
         }
@@ -986,10 +1456,8 @@
         function checkForMatch() {
             const [card1, card2] = gameState.flippedCards;
             
-            // Блокируем переворот других карт во время проверки
             gameState.canFlip = false;
             
-            // Если карты совпадают
             if (card1.id === card2.id) {
                 setTimeout(() => {
                     card1.matched = true;
@@ -1000,31 +1468,27 @@
                     gameState.matchedPairs++;
                     updateGameInfo();
                     
-                    // Воспроизводим звук
                     playSound('match');
                     
-                    // Очищаем массив перевернутых карт
                     gameState.flippedCards = [];
+                    gameState.firstCard = null;
                     gameState.canFlip = true;
                     
-                    // Проверяем завершение игры
                     if (gameState.matchedPairs === gameState.totalPairs) {
                         endGame();
                     }
                 }, 500);
             } else {
-                // Если карты не совпадают, переворачиваем их обратно
                 setTimeout(() => {
                     card1.element.classList.remove('flipped');
                     card2.element.classList.remove('flipped');
                     card1.flipped = false;
                     card2.flipped = false;
                     
-                    // Воспроизводим звук
                     playSound('mismatch');
                     
-                    // Очищаем массив перевернутых карт
                     gameState.flippedCards = [];
+                    gameState.firstCard = null;
                     gameState.canFlip = true;
                 }, 1000);
             }
@@ -1032,12 +1496,49 @@
         
         // Обновить информацию об игре
         function updateGameInfo() {
-            document.getElementById('moves').textContent = gameState.moves;
             document.getElementById('pairs-found').textContent = gameState.matchedPairs;
             document.getElementById('total-pairs').textContent = gameState.totalPairs;
+            document.getElementById('hint-count').textContent = `(${gameState.hints})`;
             
-            // Обновляем кнопку подсказки
-            document.getElementById('hint-btn').innerHTML = `<i class="fas fa-lightbulb"></i> Подсказка (${gameState.hints})`;
+            // Обновляем язык текстов
+            const lang = settings.language;
+            document.querySelector('#pairs-found').parentElement.nextElementSibling.querySelector('.stat-label').textContent = texts[lang].pairsFound;
+            document.querySelector('#total-pairs').parentElement.querySelector('.stat-label').textContent = texts[lang].totalPairs;
+            document.querySelector('#timer').parentElement.querySelector('.stat-label').textContent = texts[lang].time;
+            document.querySelector('#hint-btn').innerHTML = `<i class="fas fa-lightbulb"></i> ${texts[lang].hint} <span id="hint-count">(${gameState.hints})</span>`;
+        }
+        
+        // Использовать подсказку
+        function useHint() {
+            if (gameState.hints <= 0 || !gameState.firstCard) return;
+            
+            // Находим пару для первой перевернутой карты
+            const firstCard = gameState.firstCard;
+            const pairCard = gameState.cards.find(card => 
+                !card.matched && 
+                !card.flipped && 
+                card.id === firstCard.id && 
+                card.index !== firstCard.index
+            );
+            
+            if (pairCard) {
+                // Подсвечиваем нужную карту
+                pairCard.element.classList.add('hint');
+                
+                // Автоматически переворачиваем ее через 1 секунду
+                setTimeout(() => {
+                    if (!pairCard.matched && !pairCard.flipped) {
+                        flipCard(pairCard.element);
+                    }
+                    pairCard.element.classList.remove('hint');
+                }, 1000);
+                
+                // Уменьшаем количество подсказок
+                gameState.hints--;
+                updateGameInfo();
+                
+                playSound('hint');
+            }
         }
         
         // Запустить таймер
@@ -1060,66 +1561,26 @@
         
         // Завершить игру
         function endGame() {
-            // Останавливаем таймер, если он запущен
             if (gameState.timerInterval) {
                 clearInterval(gameState.timerInterval);
                 gameState.timerInterval = null;
             }
             
-            // Воспроизводим звук победы
             playSound('win');
             
-            // Для режима на время показываем модальное окно с результатами
+            // Для режима на время показываем модальное окно
             if (gameState.gameMode === 'timed') {
                 document.getElementById('final-time').textContent = document.getElementById('timer').textContent;
-                document.getElementById('final-moves').textContent = gameState.moves;
+                document.getElementById('final-pairs').textContent = gameState.matchedPairs;
+                document.getElementById('final-total-pairs').textContent = gameState.totalPairs;
                 
-                // Показываем модальное окно
                 setTimeout(() => {
                     document.getElementById('game-over-modal').classList.add('active');
                 }, 1000);
             } else {
-                // Для классического режима просто сообщаем о победе
                 setTimeout(() => {
-                    alert(`Поздравляем! Вы нашли все пары за ${gameState.moves} ходов!`);
+                    alert(`Поздравляем! Вы нашли все ${gameState.totalPairs} пар за ${gameState.timer} секунд!`);
                 }, 500);
-            }
-        }
-        
-        // Использовать подсказку
-        function useHint() {
-            if (gameState.hints <= 0) return;
-            
-            // Находим все неперевернутые и несовпавшие карты
-            const unflippedCards = gameState.cards.filter(card => !card.flipped && !card.matched);
-            
-            if (unflippedCards.length >= 2) {
-                // Выбираем случайные две карты
-                const randomIndex1 = Math.floor(Math.random() * unflippedCards.length);
-                let randomIndex2;
-                do {
-                    randomIndex2 = Math.floor(Math.random() * unflippedCards.length);
-                } while (randomIndex2 === randomIndex1);
-                
-                const card1 = unflippedCards[randomIndex1];
-                const card2 = unflippedCards[randomIndex2];
-                
-                // Подсвечиваем карты
-                card1.element.classList.add('hint');
-                card2.element.classList.add('hint');
-                
-                // Убираем подсветку через 1.5 секунды
-                setTimeout(() => {
-                    card1.element.classList.remove('hint');
-                    card2.element.classList.remove('hint');
-                }, 1500);
-                
-                // Уменьшаем количество подсказок
-                gameState.hints--;
-                updateGameInfo();
-                
-                // Воспроизводим звук
-                playSound('hint');
             }
         }
         
@@ -1131,7 +1592,6 @@
         
         // Вернуться к выбору режима
         function returnToModeSelection() {
-            // Останавливаем таймер, если он запущен
             if (gameState.timerInterval) {
                 clearInterval(gameState.timerInterval);
                 gameState.timerInterval = null;
@@ -1149,6 +1609,7 @@
             gameState.timer = 0;
             gameState.canFlip = true;
             gameState.hints = 3;
+            gameState.firstCard = null;
             
             if (gameState.timerInterval) {
                 clearInterval(gameState.timerInterval);
@@ -1163,43 +1624,32 @@
         
         // Сохранить рекорд
         function saveRecord() {
-            const playerName = document.getElementById('player-name').value.trim() || 'Игрок';
+            const playerName = document.getElementById('player-name').value.trim() || texts[settings.language].playerName || 'Игрок';
             const time = gameState.timer;
             const pairs = gameState.totalPairs;
-            const moves = gameState.moves;
             
-            // Получаем текущую дату
             const now = new Date();
             const dateStr = `${now.getDate().toString().padStart(2, '0')}.${(now.getMonth()+1).toString().padStart(2, '0')}.${now.getFullYear()}`;
             
-            // Получаем существующие рекорды
             let records = JSON.parse(localStorage.getItem('clashOfCardsRecords') || '[]');
             
-            // Добавляем новый рекорд
             records.push({
                 name: playerName,
                 time: time,
                 pairs: pairs,
-                moves: moves,
                 date: dateStr,
                 timestamp: now.getTime()
             });
             
-            // Сортируем по времени (меньшее время лучше)
             records.sort((a, b) => a.time - b.time);
             
-            // Оставляем только 10 лучших результатов
             if (records.length > 10) {
                 records = records.slice(0, 10);
             }
             
-            // Сохраняем в localStorage
             localStorage.setItem('clashOfCardsRecords', JSON.stringify(records));
             
-            // Закрываем модальное окно
             closeModal();
-            
-            // Показываем экран рекордов
             showScreen('records-screen');
         }
         
@@ -1208,10 +1658,8 @@
             const records = JSON.parse(localStorage.getItem('clashOfCardsRecords') || '[]');
             const recordsBody = document.getElementById('records-body');
             
-            // Очищаем таблицу
             recordsBody.innerHTML = '';
             
-            // Заполняем таблицу
             records.forEach((record, index) => {
                 const minutes = Math.floor(record.time / 60).toString().padStart(2, '0');
                 const seconds = (record.time % 60).toString().padStart(2, '0');
@@ -1228,17 +1676,16 @@
                 recordsBody.appendChild(row);
             });
             
-            // Если записей нет, показываем сообщение
             if (records.length === 0) {
                 const row = document.createElement('tr');
-                row.innerHTML = `<td colspan="5" style="text-align: center;">Нет сохраненных рекордов</td>`;
+                row.innerHTML = `<td colspan="5" style="text-align: center; padding: 40px;">${settings.language === 'ru' ? 'Нет сохраненных рекордов' : 'No saved records'}</td>`;
                 recordsBody.appendChild(row);
             }
         }
         
         // Очистить рекорды
         function clearRecords() {
-            if (confirm('Вы уверены, что хотите очистить таблицу рекордов?')) {
+            if (confirm(settings.language === 'ru' ? 'Вы уверены, что хотите очистить таблицу рекордов?' : 'Are you sure you want to clear the leaderboard?')) {
                 localStorage.removeItem('clashOfCardsRecords');
                 loadRecords();
             }
@@ -1247,16 +1694,9 @@
         // Настройки
         function loadSettings() {
             const savedSettings = JSON.parse(localStorage.getItem('clashOfCardsSettings') || '{}');
-            
-            // Объединяем с настройками по умолчанию
             settings = {...settings, ...savedSettings};
-            
-            // Применяем настройки
             gameState.soundEnabled = settings.soundEnabled;
             gameState.volume = settings.volume / 100;
-            
-            // Устанавливаем язык
-            document.getElementById('language-select').value = settings.language;
         }
         
         function saveSettings() {
@@ -1272,11 +1712,9 @@
             document.getElementById('opacity-value').textContent = settings.opacity + '%';
             document.getElementById('volume-value').textContent = settings.volume + '%';
             
-            // Обновляем кнопку звука
+            const lang = settings.language;
             document.getElementById('sound-toggle').innerHTML = 
-                settings.soundEnabled ? 
-                '<i class="fas fa-volume-up"></i> Звук включен' : 
-                '<i class="fas fa-volume-mute"></i> Звук выключен';
+                `<i class="fas fa-volume-${settings.soundEnabled ? 'up' : 'mute'}"></i> ${settings.soundEnabled ? texts[lang].soundOn : texts[lang].soundOff}`;
         }
         
         function updateBrightness() {
@@ -1307,34 +1745,121 @@
             saveSettings();
         }
         
-        function changeLanguage() {
-            settings.language = document.getElementById('language-select').value;
-            saveSettings();
-            alert('Язык будет изменен после перезагрузки страницы');
-        }
-        
         function updateBackground() {
             const brightness = settings.brightness / 100;
             const opacity = settings.opacity / 100;
             
             document.body.style.filter = `brightness(${brightness})`;
             
-            // Обновляем прозрачность экранов
             document.querySelectorAll('.screen').forEach(screen => {
-                screen.style.background = `rgba(26, 26, 46, ${opacity})`;
+                screen.style.background = `rgba(10, 10, 18, ${opacity})`;
             });
+        }
+        
+        // Язык
+        function changeLanguage(lang) {
+            settings.language = lang;
+            saveSettings();
+            updateLanguage();
+            
+            // Обновляем активную кнопку языка
+            document.querySelectorAll('.lang-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.dataset.lang === lang) {
+                    btn.classList.add('active');
+                }
+            });
+        }
+        
+        function updateLanguage() {
+            const lang = settings.language;
+            const t = texts[lang];
+            
+            // Обновляем все тексты
+            document.querySelectorAll('[data-text]').forEach(element => {
+                const key = element.dataset.text;
+                if (t[key]) {
+                    element.textContent = t[key];
+                }
+            });
+            
+            // Обновляем заголовки
+            if (document.querySelector('.title:not(#game-screen .title)')) {
+                document.querySelectorAll('.title:not(#game-screen .title)').forEach(title => {
+                    if (title.textContent.includes('CLASH')) title.textContent = t.title;
+                    else if (title.textContent.includes('КЛАССИЧЕСКИЙ') || title.textContent.includes('CLASSIC')) title.textContent = t.classic;
+                    else if (title.textContent.includes('НА ВРЕМЯ') || title.textContent.includes('TIMED')) title.textContent = t.timed;
+                    else if (title.textContent.includes('РЕКОРДЫ') || title.textContent.includes('RECORDS')) title.textContent = t.records;
+                    else if (title.textContent.includes('НАСТРОЙКИ') || title.textContent.includes('SETTINGS')) title.textContent = t.settings;
+                });
+            }
+            
+            // Обновляем подзаголовки
+            document.querySelectorAll('.subtitle').forEach(subtitle => {
+                if (subtitle.textContent.includes('FROM')) subtitle.textContent = t.subtitle;
+                else if (subtitle.textContent.includes('Выберите размер')) subtitle.textContent = t.chooseSize;
+                else if (subtitle.textContent.includes('Выберите уровень')) subtitle.textContent = t.chooseDifficulty;
+                else if (subtitle.textContent.includes('Лучшие результаты')) subtitle.textContent = t.bestResults;
+                else if (subtitle.textContent.includes('Настройте игру')) subtitle.textContent = t.customize;
+            });
+            
+            // Обновляем кнопки
+            document.querySelectorAll('.btn:not(.btn-back)').forEach(btn => {
+                if (btn.textContent.includes('Играть') || btn.textContent.includes('Play')) btn.textContent = btn.textContent.replace(/Играть|Play/, t.play);
+                if (btn.textContent.includes('Назад') || btn.textContent.includes('Back')) btn.textContent = btn.textContent.replace(/Назад|Back/, t.back);
+                if (btn.textContent.includes('Подсказка') || btn.textContent.includes('Hint')) btn.textContent = btn.textContent.replace(/Подсказка|Hint/, t.hint);
+                if (btn.textContent.includes('Заново') || btn.textContent.includes('Restart')) btn.textContent = btn.textContent.replace(/Заново|Restart/, t.restart);
+                if (btn.textContent.includes('Очистить')) btn.textContent = btn.textContent.replace(/Очистить рекорды|Clear records/, t.clearRecords);
+            });
+            
+            // Обновляем описания режимов
+            document.querySelectorAll('.mode-description, .setting-description').forEach(desc => {
+                const text = desc.textContent;
+                if (text.includes('Легкий уровень') || text.includes('Easy level')) desc.textContent = desc.textContent.replace(/Легкий уровень|Easy level/, t.easy);
+                if (text.includes('Средний уровень') || text.includes('Medium level')) desc.textContent = desc.textContent.replace(/Средний уровень|Medium level/, t.medium);
+                if (text.includes('Сложный уровень') || text.includes('Hard level')) desc.textContent = desc.textContent.replace(/Сложный уровень|Hard level/, t.hard);
+                if (text.includes('До 2 минут') || text.includes('Up to 2 minutes')) desc.textContent = desc.textContent.replace(/До 2 минут|Up to 2 minutes/, t.fast);
+                if (text.includes('До 4 минут') || text.includes('Up to 4 minutes')) desc.textContent = desc.textContent.replace(/До 4 минут|Up to 4 minutes/, t.normal);
+                if (text.includes('До 6 минут') || text.includes('Up to 6 minutes')) desc.textContent = desc.textContent.replace(/До 6 минут|Up to 6 minutes/, t.expert);
+                if (text.includes('Выберите количество пар') || text.includes('Choose number of pairs')) desc.textContent = desc.textContent.replace(/Выберите количество пар|Choose number of pairs/, t.customizePairs);
+                if (text.includes('Настройте игру') || text.includes('Customize the game')) desc.textContent = desc.textContent.replace(/Настройте игру|Customize the game/, t.customize);
+                if (text.includes('Настройте яркость') || text.includes('Background brightness')) desc.textContent = desc.textContent.replace(/Настройте яркость|Background brightness/, t.brightness);
+                if (text.includes('Настройте звуковые') || text.includes('Sound effects')) desc.textContent = desc.textContent.replace(/Настройте звуковые|Sound effects/, t.sound);
+                if (text.includes('Выберите язык') || text.includes('Choose language')) desc.textContent = desc.textContent.replace(/Выберите язык|Choose language/, t.language);
+            });
+            
+            // Обновляем заголовки настроек
+            document.querySelectorAll('.setting-title').forEach(title => {
+                if (title.textContent.includes('Внешний вид') || title.textContent.includes('Appearance')) title.textContent = t.appearance;
+                if (title.textContent.includes('Звук') || title.textContent.includes('Sound')) title.textContent = t.sound;
+                if (title.textContent.includes('Язык') || title.textContent.includes('Language')) title.textContent = t.language;
+            });
+            
+            // Обновляем модальное окно
+            if (document.getElementById('game-over-modal').classList.contains('active')) {
+                document.querySelector('.modal-title').textContent = t.victory;
+                document.querySelector('.modal-content p').textContent = t.allPairsFound;
+                document.querySelector('#name-input-container p').textContent = t.enterName;
+                document.querySelector('#player-name').placeholder = lang === 'ru' ? 'Ваше имя' : 'Your name';
+                document.querySelectorAll('.modal-content .btn').forEach((btn, i) => {
+                    if (i === 1) btn.textContent = t.saveRecord;
+                    else if (i === 2) btn.textContent = t.close;
+                    else if (i === 3) btn.textContent = t.newGame;
+                });
+            }
+            
+            // Обновляем статистику в игре
+            updateGameInfo();
         }
         
         // Звуковые эффекты
         function playSound(type) {
             if (!gameState.soundEnabled) return;
             
-            // Создаем контекст аудио
             const audioContext = new (window.AudioContext || window.webkitAudioContext)();
             const oscillator = audioContext.createOscillator();
             const gainNode = audioContext.createGain();
             
-            // Настраиваем звук в зависимости от типа
             switch(type) {
                 case 'flip':
                     oscillator.frequency.setValueAtTime(800, audioContext.currentTime);
@@ -1344,9 +1869,9 @@
                     break;
                     
                 case 'match':
-                    oscillator.frequency.setValueAtTime(523.25, audioContext.currentTime); // C5
-                    oscillator.frequency.setValueAtTime(659.25, audioContext.currentTime + 0.1); // E5
-                    oscillator.frequency.setValueAtTime(783.99, audioContext.currentTime + 0.2); // G5
+                    oscillator.frequency.setValueAtTime(523.25, audioContext.currentTime);
+                    oscillator.frequency.setValueAtTime(659.25, audioContext.currentTime + 0.1);
+                    oscillator.frequency.setValueAtTime(783.99, audioContext.currentTime + 0.2);
                     gainNode.gain.setValueAtTime(gameState.volume * 0.5, audioContext.currentTime);
                     gainNode.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + 0.3);
                     break;
@@ -1359,8 +1884,7 @@
                     break;
                     
                 case 'win':
-                    // Победа - воспроизводим несколько нот
-                    const notes = [523.25, 659.25, 783.99, 1046.50]; // C5, E5, G5, C6
+                    const notes = [523.25, 659.25, 783.99, 1046.50];
                     let currentTime = audioContext.currentTime;
                     
                     notes.forEach((note, index) => {
@@ -1373,14 +1897,13 @@
                     break;
                     
                 case 'hint':
-                    oscillator.frequency.setValueAtTime(987.77, audioContext.currentTime); // B5
-                    oscillator.frequency.setValueAtTime(1318.51, audioContext.currentTime + 0.1); // E6
+                    oscillator.frequency.setValueAtTime(987.77, audioContext.currentTime);
+                    oscillator.frequency.setValueAtTime(1318.51, audioContext.currentTime + 0.1);
                     gainNode.gain.setValueAtTime(gameState.volume * 0.4, audioContext.currentTime);
                     gainNode.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + 0.2);
                     break;
             }
             
-            // Подключаем и запускаем осциллятор
             oscillator.connect(gainNode);
             gainNode.connect(audioContext.destination);
             
