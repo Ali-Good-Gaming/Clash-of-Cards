@@ -16,10 +16,10 @@
             --light-color: #ffffff;
             --dark-color: #080810;
             --card-bg: rgba(18, 18, 37, 0.95);
-            --menu-bg: rgba(10, 10, 20, 0.7);
+            --menu-bg: rgba(10, 10, 20, 0.85);
             --transition: all 0.3s ease;
-            --card-width: 85px;
-            --card-height: 120px;
+            --card-width: 70px;
+            --card-height: 98px;
         }
 
         * {
@@ -28,28 +28,35 @@
             box-sizing: border-box;
         }
 
+        html, body {
+            height: 100%;
+            overflow: hidden;
+        }
+
         body {
             background-color: var(--dark-color);
             color: var(--light-color);
-            min-height: 100vh;
-            overflow-x: hidden;
             font-family: 'Exo 2', sans-serif;
             font-weight: 500;
             background-image: url('cards/background.png');
             background-size: cover;
             background-attachment: fixed;
             background-position: center;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 10px;
         }
 
         .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 15px;
-            min-height: 100vh;
+            width: 100%;
+            max-width: 1000px;
+            height: 95vh;
+            max-height: 800px;
             display: flex;
             flex-direction: column;
-            align-items: center;
-            justify-content: center;
+            overflow: hidden;
         }
 
         /* Главный экран */
@@ -66,9 +73,7 @@
             border: 1px solid rgba(255, 215, 0, 0.1);
             position: relative;
             overflow: hidden;
-            width: 100%;
-            max-width: 900px;
-            min-height: 600px;
+            height: 100%;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -100,8 +105,8 @@
         /* Заголовки */
         .title {
             text-align: center;
-            font-size: 3.5rem;
-            margin-bottom: 10px;
+            font-size: 3rem;
+            margin-bottom: 5px;
             font-family: 'Orbitron', sans-serif;
             font-weight: 900;
             background: linear-gradient(45deg, var(--accent-gold), #FFA500, var(--accent-gold));
@@ -110,13 +115,13 @@
             color: transparent;
             text-shadow: 0 3px 15px rgba(255, 215, 0, 0.3);
             letter-spacing: 1.5px;
-            padding-bottom: 10px;
+            padding-bottom: 5px;
         }
 
         .subtitle {
             text-align: center;
-            font-size: 1.2rem;
-            margin-bottom: 40px;
+            font-size: 1rem;
+            margin-bottom: 30px;
             color: #aaa;
             font-weight: 500;
             letter-spacing: 0.5px;
@@ -128,21 +133,21 @@
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            padding: 14px 28px;
+            padding: 12px 24px;
             background: linear-gradient(135deg, var(--accent-gold-dark), var(--accent-gold));
             color: var(--dark-color);
             border: none;
-            border-radius: 10px;
-            font-size: 1.2rem;
+            border-radius: 8px;
+            font-size: 1rem;
             font-weight: 700;
             cursor: pointer;
             transition: var(--transition);
-            margin: 8px;
+            margin: 5px;
             position: relative;
             overflow: hidden;
             z-index: 1;
             box-shadow: 0 4px 12px rgba(255, 215, 0, 0.2);
-            min-width: 180px;
+            min-width: 140px;
             font-family: 'Exo 2', sans-serif;
             text-transform: uppercase;
             letter-spacing: 0.5px;
@@ -150,7 +155,7 @@
 
         .btn:hover {
             transform: translateY(-3px);
-            box-shadow: 0 8px 20px rgba(255, 215, 0, 0.3);
+            box-shadow: 0 6px 18px rgba(255, 215, 0, 0.3);
             background: linear-gradient(135deg, var(--accent-gold), #FFEC8B);
         }
 
@@ -175,22 +180,18 @@
         }
 
         .btn-small {
-            padding: 10px 20px;
-            font-size: 1rem;
-            min-width: 140px;
+            padding: 8px 16px;
+            font-size: 0.9rem;
+            min-width: 120px;
         }
 
         .btn-back {
-            position: absolute;
-            top: 20px;
-            left: 20px;
-            z-index: 100;
             background: rgba(10, 10, 16, 0.8);
             color: var(--accent-gold);
             border: 2px solid var(--accent-gold);
-            padding: 10px 20px;
+            padding: 8px 16px;
             min-width: auto;
-            font-size: 1rem;
+            font-size: 0.9rem;
         }
 
         /* Игровой экран */
@@ -199,8 +200,6 @@
             height: 100%;
             display: flex;
             flex-direction: column;
-            align-items: center;
-            justify-content: space-between;
             padding: 10px;
         }
 
@@ -209,18 +208,15 @@
             justify-content: space-between;
             align-items: center;
             width: 100%;
-            margin-bottom: 15px;
-            padding: 15px;
-            background: rgba(10, 10, 16, 0.7);
-            border-radius: 12px;
-            border: 1px solid rgba(255, 215, 0, 0.1);
+            padding: 10px 0;
+            margin-bottom: 10px;
         }
 
         .stats-center {
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 30px;
+            gap: 20px;
             flex: 1;
         }
 
@@ -228,15 +224,15 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            padding: 10px 20px;
+            padding: 8px 15px;
             background: rgba(255, 215, 0, 0.1);
-            border-radius: 10px;
+            border-radius: 8px;
             border: 1px solid rgba(255, 215, 0, 0.2);
-            min-width: 150px;
+            min-width: 120px;
         }
 
         .stat-value {
-            font-size: 2.2rem;
+            font-size: 1.8rem;
             font-weight: 700;
             color: var(--accent-gold);
             font-family: 'Orbitron', sans-serif;
@@ -244,14 +240,14 @@
         }
 
         .stat-label {
-            font-size: 0.9rem;
+            font-size: 0.8rem;
             color: #aaa;
             text-transform: uppercase;
             letter-spacing: 0.5px;
-            margin-top: 5px;
+            margin-top: 3px;
         }
 
-        .game-actions {
+        .game-actions-top {
             display: flex;
             gap: 10px;
         }
@@ -263,37 +259,46 @@
             justify-content: center;
             align-items: center;
             overflow: hidden;
-            margin: 10px 0;
+            margin: 5px 0;
         }
 
         .game-board {
             display: grid;
-            gap: 10px;
+            gap: 8px;
             justify-content: center;
             align-content: center;
             perspective: 1000px;
-            padding: 15px;
+            padding: 10px;
             background: rgba(10, 10, 16, 0.5);
-            border-radius: 12px;
+            border-radius: 10px;
             border: 1px solid rgba(255, 215, 0, 0.1);
             max-width: 100%;
-            max-height: 450px;
+            max-height: 380px;
             overflow: auto;
         }
 
         .game-board::-webkit-scrollbar {
-            width: 8px;
-            height: 8px;
+            width: 6px;
+            height: 6px;
         }
 
         .game-board::-webkit-scrollbar-track {
             background: rgba(255, 215, 0, 0.1);
-            border-radius: 4px;
+            border-radius: 3px;
         }
 
         .game-board::-webkit-scrollbar-thumb {
             background: var(--accent-gold);
-            border-radius: 4px;
+            border-radius: 3px;
+        }
+
+        .game-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            padding: 10px 0;
+            margin-top: 10px;
         }
 
         /* Карточки */
@@ -304,9 +309,9 @@
             transform-style: preserve-3d;
             transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
             cursor: pointer;
-            border-radius: 8px;
+            border-radius: 6px;
             overflow: hidden;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
         }
 
         .card.flipped {
@@ -319,8 +324,8 @@
         }
 
         @keyframes matchedGlow {
-            0% { box-shadow: 0 0 10px rgba(255, 215, 0, 0.4); }
-            100% { box-shadow: 0 0 20px rgba(255, 215, 0, 0.7); }
+            0% { box-shadow: 0 0 8px rgba(255, 215, 0, 0.4); }
+            100% { box-shadow: 0 0 15px rgba(255, 215, 0, 0.7); }
         }
 
         .card-front, .card-back {
@@ -328,7 +333,7 @@
             width: 100%;
             height: 100%;
             backface-visibility: hidden;
-            border-radius: 8px;
+            border-radius: 6px;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -338,15 +343,16 @@
             background: linear-gradient(145deg, #1a1a2e, #16213e);
             transform: rotateY(180deg);
             overflow: hidden;
-            padding: 5px;
+            padding: 4px;
         }
 
         .card-back {
             background-color: transparent;
             background-image: url('cards/card.png');
-            background-size: cover;
+            background-size: contain;
             background-position: center;
-            border: 2px solid rgba(255, 215, 0, 0.2);
+            background-repeat: no-repeat;
+            border: 1px solid rgba(255, 215, 0, 0.2);
         }
 
         .card-back::before {
@@ -357,17 +363,17 @@
             right: 0;
             bottom: 0;
             background: rgba(10, 10, 16, 0.3);
-            border-radius: 6px;
+            border-radius: 5px;
         }
 
         .card-image {
             width: 100%;
             height: 100%;
             object-fit: contain;
-            border-radius: 6px;
+            border-radius: 4px;
         }
 
-        /* Выбор режима - центрированный */
+        /* Выбор режима */
         .mode-selection-container {
             display: flex;
             flex-direction: column;
@@ -375,22 +381,22 @@
             justify-content: center;
             width: 100%;
             flex: 1;
-            padding: 20px 0;
+            padding: 10px 0;
         }
 
         .mode-buttons {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
-            gap: 25px;
+            gap: 15px;
             width: 100%;
-            max-width: 700px;
-            margin: 30px 0;
+            max-width: 600px;
+            margin: 20px 0;
         }
 
         .mode-btn {
             background: rgba(15, 15, 30, 0.8);
-            border-radius: 15px;
-            padding: 30px 20px;
+            border-radius: 12px;
+            padding: 20px 15px;
             text-align: center;
             transition: var(--transition);
             border: 2px solid transparent;
@@ -399,28 +405,28 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            min-height: 220px;
+            min-height: 150px;
         }
 
         .mode-btn:hover {
             transform: translateY(-5px);
             border-color: var(--accent-gold);
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
         }
 
         .mode-icon {
-            font-size: 3rem;
-            margin-bottom: 20px;
+            font-size: 2.2rem;
+            margin-bottom: 15px;
             color: var(--accent-gold);
-            height: 60px;
+            height: 50px;
             display: flex;
             align-items: center;
             justify-content: center;
         }
 
         .mode-btn-title {
-            font-size: 1.8rem;
-            margin-bottom: 15px;
+            font-size: 1.4rem;
+            margin-bottom: 10px;
             color: var(--accent-gold);
             font-family: 'Orbitron', sans-serif;
             font-weight: 700;
@@ -429,9 +435,9 @@
 
         .mode-btn-desc {
             color: #aaa;
-            font-size: 1rem;
-            line-height: 1.4;
-            margin-bottom: 20px;
+            font-size: 0.85rem;
+            line-height: 1.3;
+            margin-bottom: 15px;
         }
 
         /* Выбор размера */
@@ -442,22 +448,22 @@
             justify-content: center;
             width: 100%;
             flex: 1;
-            padding: 20px 0;
+            padding: 10px 0;
         }
 
         .size-options {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
-            gap: 20px;
+            gap: 15px;
             width: 100%;
-            max-width: 700px;
-            margin: 30px 0;
+            max-width: 600px;
+            margin: 20px 0;
         }
 
         .size-option {
             background: rgba(15, 15, 30, 0.8);
-            border-radius: 12px;
-            padding: 25px 20px;
+            border-radius: 10px;
+            padding: 20px 15px;
             text-align: center;
             transition: var(--transition);
             border: 2px solid transparent;
@@ -466,31 +472,31 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            min-height: 180px;
+            min-height: 130px;
         }
 
         .size-option:hover {
             border-color: var(--accent-gold);
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
         }
 
         .size-icon {
-            font-size: 2.5rem;
-            margin-bottom: 15px;
+            font-size: 2rem;
+            margin-bottom: 10px;
             color: var(--accent-gold);
         }
 
         .size-title {
-            font-size: 1.5rem;
-            margin-bottom: 10px;
+            font-size: 1.2rem;
+            margin-bottom: 8px;
             color: var(--accent-gold);
             font-weight: 700;
         }
 
         .size-desc {
             color: #aaa;
-            font-size: 0.9rem;
-            margin-bottom: 15px;
+            font-size: 0.8rem;
+            margin-bottom: 10px;
         }
 
         /* Настройки */
@@ -500,22 +506,22 @@
             align-items: center;
             width: 100%;
             flex: 1;
-            padding: 20px 0;
+            padding: 10px 0;
         }
 
         .settings-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 25px;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
             width: 100%;
-            max-width: 800px;
-            margin: 30px 0;
+            max-width: 700px;
+            margin: 20px 0;
         }
 
         .setting-option {
             background: rgba(15, 15, 30, 0.8);
-            border-radius: 15px;
-            padding: 25px;
+            border-radius: 12px;
+            padding: 20px;
             transition: var(--transition);
             border: 1px solid rgba(255, 215, 0, 0.1);
             display: flex;
@@ -525,79 +531,79 @@
         }
 
         .setting-icon {
-            font-size: 2.5rem;
-            margin-bottom: 20px;
+            font-size: 2rem;
+            margin-bottom: 15px;
             color: var(--accent-gold);
         }
 
         .setting-title {
-            font-size: 1.5rem;
-            margin-bottom: 15px;
+            font-size: 1.3rem;
+            margin-bottom: 10px;
             color: var(--accent-gold);
             font-weight: 700;
         }
 
         .setting-desc {
             color: #aaa;
-            margin-bottom: 20px;
-            font-size: 1rem;
+            margin-bottom: 15px;
+            font-size: 0.9rem;
         }
 
         .slider-container {
-            margin: 20px 0;
+            margin: 15px 0;
             width: 100%;
         }
 
         .slider-label {
             display: flex;
             justify-content: space-between;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
             color: #ddd;
             font-weight: 600;
-            font-size: 1rem;
+            font-size: 0.9rem;
         }
 
         .slider {
             width: 100%;
-            height: 10px;
+            height: 8px;
             -webkit-appearance: none;
             background: rgba(255, 215, 0, 0.1);
-            border-radius: 5px;
+            border-radius: 4px;
             outline: none;
             border: 1px solid rgba(255, 215, 0, 0.2);
         }
 
         .slider::-webkit-slider-thumb {
             -webkit-appearance: none;
-            width: 22px;
-            height: 22px;
+            width: 18px;
+            height: 18px;
             border-radius: 50%;
             background: var(--accent-gold);
             cursor: pointer;
-            border: 3px solid var(--dark-color);
-            box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+            border: 2px solid var(--dark-color);
+            box-shadow: 0 0 8px rgba(255, 215, 0, 0.5);
         }
 
         .language-selector {
             display: flex;
-            gap: 15px;
-            margin-top: 20px;
+            gap: 10px;
+            margin-top: 15px;
             width: 100%;
             justify-content: center;
         }
 
         .lang-btn {
-            padding: 12px 25px;
+            padding: 10px 20px;
             background: rgba(255, 215, 0, 0.1);
             border: 2px solid rgba(255, 215, 0, 0.3);
-            border-radius: 10px;
+            border-radius: 8px;
             color: #ddd;
-            font-size: 1.1rem;
+            font-size: 0.9rem;
             cursor: pointer;
             transition: var(--transition);
             text-transform: uppercase;
             font-weight: 600;
-            min-width: 120px;
+            min-width: 100px;
         }
 
         .lang-btn:hover {
@@ -609,16 +615,16 @@
             background: var(--accent-gold);
             color: var(--dark-color);
             border-color: var(--accent-gold);
-            box-shadow: 0 0 15px rgba(255, 215, 0, 0.5);
+            box-shadow: 0 0 12px rgba(255, 215, 0, 0.5);
         }
 
         /* Соцсети */
         .social-links {
             display: flex;
             justify-content: center;
-            gap: 20px;
-            margin-top: 40px;
-            padding-top: 25px;
+            gap: 15px;
+            margin-top: 20px;
+            padding-top: 15px;
             border-top: 1px solid rgba(255, 255, 255, 0.1);
             width: 100%;
         }
@@ -627,12 +633,12 @@
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            width: 50px;
-            height: 50px;
+            width: 40px;
+            height: 40px;
             border-radius: 50%;
             background: linear-gradient(135deg, var(--accent-gold-dark), var(--accent-gold));
             color: var(--dark-color);
-            font-size: 1.5rem;
+            font-size: 1.2rem;
             transition: var(--transition);
             position: relative;
             overflow: hidden;
@@ -640,7 +646,7 @@
 
         .social-link:hover {
             transform: translateY(-3px) rotate(5deg);
-            box-shadow: 0 8px 20px rgba(255, 215, 0, 0.3);
+            box-shadow: 0 5px 15px rgba(255, 215, 0, 0.3);
         }
 
         /* Модальное окно */
@@ -666,12 +672,12 @@
 
         .modal-content {
             background: linear-gradient(145deg, #1a1a2e, #16213e);
-            padding: 35px;
-            border-radius: 20px;
-            max-width: 500px;
+            padding: 25px;
+            border-radius: 15px;
+            max-width: 450px;
             width: 90%;
             text-align: center;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.5);
             border: 2px solid var(--accent-gold);
             position: relative;
             overflow: hidden;
@@ -688,21 +694,21 @@
         }
 
         .modal-title {
-            font-size: 2.2rem;
-            margin-bottom: 20px;
+            font-size: 1.8rem;
+            margin-bottom: 15px;
             color: var(--accent-gold);
             font-family: 'Orbitron', sans-serif;
         }
 
         .modal-input {
             width: 100%;
-            padding: 15px;
-            margin: 20px 0;
-            border-radius: 10px;
+            padding: 12px;
+            margin: 15px 0;
+            border-radius: 8px;
             border: 2px solid var(--accent-gold);
             background: rgba(10, 10, 16, 0.8);
             color: white;
-            font-size: 1.1rem;
+            font-size: 1rem;
             text-align: center;
         }
 
@@ -715,52 +721,47 @@
 
         .card.hint {
             animation: hintPulse 0.5s infinite;
-            box-shadow: 0 0 15px var(--accent-gold);
+            box-shadow: 0 0 12px var(--accent-gold);
             z-index: 10;
         }
 
         /* Адаптивность */
         @media (max-width: 768px) {
             .container {
-                padding: 10px;
-            }
-            
-            .screen {
-                padding: 15px;
-                min-height: 500px;
+                height: 90vh;
+                max-height: 700px;
             }
             
             .title {
-                font-size: 2.5rem;
+                font-size: 2.2rem;
             }
             
             .subtitle {
-                font-size: 1rem;
-                margin-bottom: 30px;
+                font-size: 0.9rem;
             }
             
             .mode-buttons {
                 grid-template-columns: 1fr;
-                gap: 15px;
+                gap: 10px;
             }
             
             .mode-btn {
-                min-height: 180px;
-                padding: 20px 15px;
+                min-height: 120px;
+                padding: 15px 10px;
             }
             
             .mode-btn-title {
-                font-size: 1.5rem;
+                font-size: 1.2rem;
             }
             
             .size-options {
                 grid-template-columns: 1fr;
-                gap: 15px;
+                gap: 10px;
             }
             
             .size-option {
-                min-height: 150px;
-                padding: 20px 15px;
+                min-height: 110px;
+                padding: 15px 10px;
             }
             
             .settings-grid {
@@ -769,53 +770,27 @@
             
             .game-header {
                 flex-direction: column;
-                gap: 15px;
-                padding: 15px 10px;
+                gap: 10px;
             }
             
             .stats-center {
                 flex-direction: column;
-                gap: 10px;
+                gap: 8px;
             }
             
             .stat {
-                min-width: 200px;
+                min-width: 180px;
             }
             
             .game-board {
-                gap: 8px;
-                padding: 10px;
-            }
-            
-            .card {
-                width: 70px;
-                height: 100px;
-            }
-            
-            .btn {
-                min-width: 140px;
-                padding: 12px 24px;
-                font-size: 1rem;
-            }
-            
-            .btn-back {
-                padding: 8px 16px;
-                font-size: 0.9rem;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .title {
-                font-size: 2rem;
+                gap: 6px;
+                padding: 8px;
+                max-height: 300px;
             }
             
             .card {
                 width: 60px;
-                height: 85px;
-            }
-            
-            .stat-value {
-                font-size: 1.8rem;
+                height: 84px;
             }
             
             .btn {
@@ -824,12 +799,38 @@
                 font-size: 0.9rem;
             }
             
+            .game-footer {
+                flex-direction: column;
+                gap: 10px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .title {
+                font-size: 1.8rem;
+            }
+            
+            .card {
+                width: 55px;
+                height: 77px;
+            }
+            
+            .stat-value {
+                font-size: 1.5rem;
+            }
+            
+            .btn {
+                min-width: 110px;
+                padding: 8px 16px;
+                font-size: 0.85rem;
+            }
+            
             .mode-btn-title {
-                font-size: 1.3rem;
+                font-size: 1.1rem;
             }
             
             .size-title {
-                font-size: 1.3rem;
+                font-size: 1.1rem;
             }
         }
 
@@ -841,34 +842,34 @@
             justify-content: center;
             width: 100%;
             flex: 1;
-            padding: 20px 0;
+            padding: 10px 0;
         }
 
         .custom-slider {
             width: 100%;
-            max-width: 500px;
-            margin: 30px 0;
+            max-width: 400px;
+            margin: 20px 0;
         }
 
         /* Рекорды */
         .records-container {
             background: rgba(15, 15, 30, 0.8);
-            border-radius: 15px;
-            padding: 25px;
-            margin: 20px 0;
+            border-radius: 12px;
+            padding: 15px;
+            margin: 15px 0;
             border: 1px solid rgba(255, 215, 0, 0.1);
             width: 100%;
-            max-width: 800px;
-            max-height: 400px;
+            max-width: 700px;
+            max-height: 300px;
             overflow-y: auto;
         }
 
         .records-table {
             width: 100%;
             border-collapse: collapse;
-            margin: 20px 0;
+            margin: 15px 0;
             background: rgba(10, 10, 16, 0.6);
-            border-radius: 10px;
+            border-radius: 8px;
             overflow: hidden;
             border: 1px solid rgba(255, 215, 0, 0.1);
         }
@@ -876,29 +877,18 @@
         .records-table th {
             background: linear-gradient(135deg, var(--accent-gold-dark), var(--accent-gold));
             color: var(--dark-color);
-            padding: 15px;
+            padding: 10px;
             text-align: center;
             font-weight: 700;
-            font-size: 1rem;
+            font-size: 0.9rem;
         }
 
         .records-table td {
-            padding: 12px 15px;
+            padding: 8px 10px;
             text-align: center;
             border-bottom: 1px solid rgba(255, 255, 255, 0.05);
             color: #ddd;
-            font-size: 1rem;
-        }
-
-        /* Таймер в игре */
-        .timer-container {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            color: var(--accent-gold);
-            font-family: 'Orbitron', sans-serif;
-            font-size: 1.2rem;
-            font-weight: 700;
+            font-size: 0.9rem;
         }
 
         /* Анимация появления карт */
@@ -908,7 +898,12 @@
         }
 
         .card {
-            animation: cardAppear 0.5s ease-out;
+            animation: cardAppear 0.3s ease-out;
+        }
+
+        /* Убираем скролл */
+        body.no-scroll {
+            overflow: hidden;
         }
     </style>
 </head>
@@ -916,7 +911,6 @@
     <div class="container">
         <!-- Главное меню -->
         <div id="main-screen" class="screen active">
-            <button class="btn btn-back" onclick="showScreen('main-screen')" style="display: none;"><i class="fas fa-arrow-left"></i></button>
             <h1 class="title">CLASH OF CARDS</h1>
             <p class="subtitle">FROM ALI_GOOD_GAMING</p>
             
@@ -924,26 +918,26 @@
                 <div class="mode-buttons">
                     <div class="mode-btn" onclick="showScreen('classic-screen')">
                         <div class="mode-icon"><i class="fas fa-crown"></i></div>
-                        <div class="mode-btn-title">Классический</div>
-                        <div class="mode-btn-desc">Найдите все пары без ограничения времени</div>
+                        <div class="mode-btn-title" id="classic-title">Классический</div>
+                        <div class="mode-btn-desc" id="classic-desc">Найдите все пары без ограничения времени</div>
                     </div>
                     
                     <div class="mode-btn" onclick="showScreen('timed-screen')">
                         <div class="mode-icon"><i class="fas fa-clock"></i></div>
-                        <div class="mode-btn-title">На время</div>
-                        <div class="mode-btn-desc">Соревнуйтесь со временем и попадите в таблицу рекордов</div>
+                        <div class="mode-btn-title" id="timed-title">На время</div>
+                        <div class="mode-btn-desc" id="timed-desc">Соревнуйтесь со временем и попадите в таблицу рекордов</div>
                     </div>
                     
                     <div class="mode-btn" onclick="showScreen('records-screen')">
                         <div class="mode-icon"><i class="fas fa-trophy"></i></div>
-                        <div class="mode-btn-title">Рекорды</div>
-                        <div class="mode-btn-desc">Лучшие результаты игроков</div>
+                        <div class="mode-btn-title" id="records-title">Рекорды</div>
+                        <div class="mode-btn-desc" id="records-desc">Лучшие результаты игроков</div>
                     </div>
                     
                     <div class="mode-btn" onclick="showScreen('settings-screen')">
                         <div class="mode-icon"><i class="fas fa-cog"></i></div>
-                        <div class="mode-btn-title">Настройки</div>
-                        <div class="mode-btn-desc">Настройте игру под себя</div>
+                        <div class="mode-btn-title" id="settings-title">Настройки</div>
+                        <div class="mode-btn-desc" id="settings-desc">Настройте игру под себя</div>
                     </div>
                 </div>
             </div>
@@ -963,34 +957,34 @@
         
         <!-- Классический режим -->
         <div id="classic-screen" class="screen">
-            <button class="btn btn-back" onclick="showScreen('main-screen')"><i class="fas fa-arrow-left"></i> Назад</button>
-            <h2 class="title">КЛАССИЧЕСКИЙ</h2>
-            <p class="subtitle">Выберите размер поля</p>
+            <button class="btn btn-back" onclick="showScreen('main-screen')"><i class="fas fa-arrow-left"></i> <span id="back-text">Назад</span></button>
+            <h2 class="title" id="classic-mode-title">КЛАССИЧЕСКИЙ</h2>
+            <p class="subtitle" id="classic-mode-subtitle">Выберите размер поля</p>
             
             <div class="size-selection-container">
                 <div class="size-options">
                     <div class="size-option" onclick="startGame(8, 'classic')">
                         <div class="size-icon"><i class="fas fa-th"></i></div>
                         <div class="size-title">4×4 (8 пар)</div>
-                        <div class="size-desc">Легкий уровень, идеально для начала</div>
+                        <div class="size-desc" id="easy-desc">Легкий уровень, идеально для начала</div>
                     </div>
                     
                     <div class="size-option" onclick="startGame(15, 'classic')">
                         <div class="size-icon"><i class="fas fa-th-large"></i></div>
                         <div class="size-title">6×5 (15 пар)</div>
-                        <div class="size-desc">Средняя сложность, больше карт</div>
+                        <div class="size-desc" id="medium-desc">Средняя сложность, больше карт</div>
                     </div>
                     
                     <div class="size-option" onclick="startGame(25, 'classic')">
                         <div class="size-icon"><i class="fas fa-border-all"></i></div>
                         <div class="size-title">10×5 (25 пар)</div>
-                        <div class="size-desc">Сложный уровень, максимум пар</div>
+                        <div class="size-desc" id="hard-desc">Сложный уровень, максимум пар</div>
                     </div>
                     
                     <div class="size-option" onclick="showCustomSize('classic')">
                         <div class="size-icon"><i class="fas fa-sliders-h"></i></div>
-                        <div class="size-title">Настроить</div>
-                        <div class="size-desc">Выберите свое количество пар</div>
+                        <div class="size-title" id="customize-title">Настроить</div>
+                        <div class="size-desc" id="customize-desc">Выберите свое количество пар</div>
                     </div>
                 </div>
             </div>
@@ -998,34 +992,34 @@
         
         <!-- Режим на время -->
         <div id="timed-screen" class="screen">
-            <button class="btn btn-back" onclick="showScreen('main-screen')"><i class="fas fa-arrow-left"></i> Назад</button>
-            <h2 class="title">НА ВРЕМЯ</h2>
-            <p class="subtitle">Выберите уровень сложности</p>
+            <button class="btn btn-back" onclick="showScreen('main-screen')"><i class="fas fa-arrow-left"></i> <span id="back-text-timed">Назад</span></button>
+            <h2 class="title" id="timed-mode-title">НА ВРЕМЯ</h2>
+            <p class="subtitle" id="timed-mode-subtitle">Выберите уровень сложности</p>
             
             <div class="size-selection-container">
                 <div class="size-options">
                     <div class="size-option" onclick="startGame(8, 'timed')">
                         <div class="size-icon"><i class="fas fa-bolt"></i></div>
-                        <div class="size-title">Быстрый</div>
-                        <div class="size-desc">8 пар, до 2 минут</div>
+                        <div class="size-title" id="fast-title">Быстрый</div>
+                        <div class="size-desc" id="fast-desc">8 пар, до 2 минут</div>
                     </div>
                     
                     <div class="size-option" onclick="startGame(15, 'timed')">
                         <div class="size-icon"><i class="fas fa-running"></i></div>
-                        <div class="size-title">Средний</div>
-                        <div class="size-desc">15 пар, до 4 минут</div>
+                        <div class="size-title" id="normal-title">Средний</div>
+                        <div class="size-desc" id="normal-desc">15 пар, до 4 минут</div>
                     </div>
                     
                     <div class="size-option" onclick="startGame(25, 'timed')">
                         <div class="size-icon"><i class="fas fa-skull-crossbones"></i></div>
-                        <div class="size-title">Эксперт</div>
-                        <div class="size-desc">25 пар, до 6 минут</div>
+                        <div class="size-title" id="expert-title">Эксперт</div>
+                        <div class="size-desc" id="expert-desc">25 пар, до 6 минут</div>
                     </div>
                     
                     <div class="size-option" onclick="showCustomSize('timed')">
                         <div class="size-icon"><i class="fas fa-sliders-h"></i></div>
-                        <div class="size-title">Настроить</div>
-                        <div class="size-desc">Выберите свое количество пар</div>
+                        <div class="size-title" id="customize-title-timed">Настроить</div>
+                        <div class="size-desc" id="customize-desc-timed">Выберите свое количество пар</div>
                     </div>
                 </div>
             </div>
@@ -1033,22 +1027,22 @@
         
         <!-- Кастомный выбор размера -->
         <div id="custom-size-screen" class="screen">
-            <button class="btn btn-back" onclick="returnToModeSelection()"><i class="fas fa-arrow-left"></i> Назад</button>
+            <button class="btn btn-back" onclick="returnToModeSelection()"><i class="fas fa-arrow-left"></i> <span id="back-text-custom">Назад</span></button>
             <h2 class="title" id="custom-mode-title">НАСТРОЙКА</h2>
-            <p class="subtitle">Выберите количество пар от 4 до 25</p>
+            <p class="subtitle" id="custom-mode-subtitle">Выберите количество пар от 4 до 25</p>
             
             <div class="custom-size-container">
                 <div class="custom-slider">
                     <div class="slider-container">
                         <div class="slider-label">
-                            <span>Количество пар:</span>
+                            <span id="pairs-label">Количество пар:</span>
                             <span id="pairs-value">12</span>
                         </div>
                         <input type="range" id="custom-pairs" min="4" max="25" value="12" class="slider">
                     </div>
                     
-                    <div style="margin-top: 40px;">
-                        <button class="btn" onclick="startCustomGame()">Начать игру</button>
+                    <div style="margin-top: 30px;">
+                        <button class="btn" onclick="startCustomGame()" id="start-game-btn">Начать игру</button>
                     </div>
                 </div>
             </div>
@@ -1056,28 +1050,25 @@
         
         <!-- Игровой экран -->
         <div id="game-screen" class="screen">
-            <button class="btn btn-back" onclick="returnToModeSelection()"><i class="fas fa-arrow-left"></i> Назад</button>
-            
             <div class="game-screen-container">
                 <div class="game-header">
                     <div class="stats-center">
                         <div class="stat">
                             <div class="stat-value" id="pairs-found">0</div>
-                            <div class="stat-label">Найдено пар</div>
+                            <div class="stat-label" id="pairs-found-label">Найдено пар</div>
                         </div>
                         <div class="stat">
                             <div class="stat-value" id="total-pairs">0</div>
-                            <div class="stat-label">Всего пар</div>
+                            <div class="stat-label" id="total-pairs-label">Всего пар</div>
                         </div>
                         <div class="stat" id="timer-container">
                             <div class="stat-value" id="timer">00:00</div>
-                            <div class="stat-label">Время</div>
+                            <div class="stat-label" id="timer-label">Время</div>
                         </div>
                     </div>
                     
-                    <div class="game-actions">
-                        <button class="btn" id="hint-btn" onclick="useHint()"><i class="fas fa-lightbulb"></i> Подсказка</button>
-                        <button class="btn" onclick="restartGame()"><i class="fas fa-redo"></i> Заново</button>
+                    <div class="game-actions-top">
+                        <button class="btn" onclick="restartGame()"><i class="fas fa-redo"></i> <span id="restart-text">Заново</span></button>
                     </div>
                 </div>
                 
@@ -1085,7 +1076,12 @@
                     <div id="game-board" class="game-board"></div>
                 </div>
                 
-                <div style="text-align: center; margin-top: 15px; color: #aaa; font-size: 1rem;">
+                <div class="game-footer">
+                    <button class="btn btn-back" onclick="returnToModeSelection()"><i class="fas fa-arrow-left"></i> <span id="back-game-text">Назад</span></button>
+                    <button class="btn" id="hint-btn" onclick="useHint()"><i class="fas fa-lightbulb"></i> <span id="hint-text">Подсказка</span> (<span id="hint-count">3</span>)</button>
+                </div>
+                
+                <div style="text-align: center; margin-top: 10px; color: #aaa; font-size: 0.9rem;">
                     <div id="game-mode-label"></div>
                 </div>
             </div>
@@ -1093,23 +1089,23 @@
         
         <!-- Рекорды -->
         <div id="records-screen" class="screen">
-            <button class="btn btn-back" onclick="showScreen('main-screen')"><i class="fas fa-arrow-left"></i> Назад</button>
-            <h2 class="title">РЕКОРДЫ</h2>
-            <p class="subtitle">Лучшие результаты в режиме "На время"</p>
+            <button class="btn btn-back" onclick="showScreen('main-screen')"><i class="fas fa-arrow-left"></i> <span id="back-records-text">Назад</span></button>
+            <h2 class="title" id="records-title-page">РЕКОРДЫ</h2>
+            <p class="subtitle" id="records-subtitle">Лучшие результаты в режиме "На время"</p>
             
             <div class="records-container">
-                <div style="text-align: center; margin-bottom: 20px;">
-                    <button class="btn" onclick="clearRecords()"><i class="fas fa-trash"></i> Очистить рекорды</button>
+                <div style="text-align: center; margin-bottom: 15px;">
+                    <button class="btn" onclick="clearRecords()"><i class="fas fa-trash"></i> <span id="clear-records-text">Очистить рекорды</span></button>
                 </div>
                 
                 <table class="records-table">
                     <thead>
                         <tr>
-                            <th>Место</th>
-                            <th>Имя</th>
-                            <th>Время</th>
-                            <th>Пар</th>
-                            <th>Дата</th>
+                            <th id="place-header">Место</th>
+                            <th id="name-header">Имя</th>
+                            <th id="time-header">Время</th>
+                            <th id="pairs-header">Пар</th>
+                            <th id="date-header">Дата</th>
                         </tr>
                     </thead>
                     <tbody id="records-body">
@@ -1121,58 +1117,58 @@
         
         <!-- Настройки -->
         <div id="settings-screen" class="screen">
-            <button class="btn btn-back" onclick="showScreen('main-screen')"><i class="fas fa-arrow-left"></i> Назад</button>
-            <h2 class="title">НАСТРОЙКИ</h2>
-            <p class="subtitle">Настройте игру под себя</p>
+            <button class="btn btn-back" onclick="showScreen('main-screen')"><i class="fas fa-arrow-left"></i> <span id="back-settings-text">Назад</span></button>
+            <h2 class="title" id="settings-title-page">НАСТРОЙКИ</h2>
+            <p class="subtitle" id="settings-subtitle">Настройте игру под себя</p>
             
             <div class="settings-container">
                 <div class="settings-grid">
                     <div class="setting-option">
                         <div class="setting-icon"><i class="fas fa-image"></i></div>
-                        <h3 class="setting-title">Внешний вид</h3>
-                        <p class="setting-desc">Настройте яркость и прозрачность интерфейса</p>
+                        <h3 class="setting-title" id="appearance-title">Внешний вид</h3>
+                        <p class="setting-desc" id="appearance-desc">Настройте яркость и прозрачность интерфейса</p>
                         
                         <div class="slider-container">
                             <div class="slider-label">
-                                <span>Яркость фона</span>
-                                <span id="brightness-value">100%</span>
+                                <span id="brightness-label">Яркость фона</span>
+                                <span id="brightness-value-text">100%</span>
                             </div>
                             <input type="range" min="20" max="100" value="100" class="slider" id="brightness-slider">
                         </div>
                         
                         <div class="slider-container">
                             <div class="slider-label">
-                                <span>Прозрачность меню</span>
-                                <span id="opacity-value">70%</span>
+                                <span id="opacity-label">Прозрачность меню</span>
+                                <span id="opacity-value-text">85%</span>
                             </div>
-                            <input type="range" min="20" max="90" value="70" class="slider" id="opacity-slider">
+                            <input type="range" min="20" max="90" value="85" class="slider" id="opacity-slider">
                         </div>
                     </div>
                     
                     <div class="setting-option">
                         <div class="setting-icon"><i class="fas fa-volume-up"></i></div>
-                        <h3 class="setting-title">Звук</h3>
-                        <p class="setting-desc">Настройте звуковые эффекты игры</p>
+                        <h3 class="setting-title" id="sound-title">Звук</h3>
+                        <p class="setting-desc" id="sound-desc">Настройте звуковые эффекты игры</p>
                         
                         <div class="slider-container">
                             <div class="slider-label">
-                                <span>Громкость</span>
-                                <span id="volume-value">70%</span>
+                                <span id="volume-label">Громкость</span>
+                                <span id="volume-value-text">70%</span>
                             </div>
                             <input type="range" min="0" max="100" value="70" class="slider" id="volume-slider">
                         </div>
                         
-                        <div style="margin-top: 25px;">
+                        <div style="margin-top: 20px;">
                             <button class="btn" id="sound-toggle">
-                                <i class="fas fa-volume-up"></i> Звук включен
+                                <i class="fas fa-volume-up"></i> <span id="sound-toggle-text">Звук включен</span>
                             </button>
                         </div>
                     </div>
                     
                     <div class="setting-option">
                         <div class="setting-icon"><i class="fas fa-globe"></i></div>
-                        <h3 class="setting-title">Язык</h3>
-                        <p class="setting-desc">Выберите язык интерфейса</p>
+                        <h3 class="setting-title" id="language-title">Язык</h3>
+                        <p class="setting-desc" id="language-desc">Выберите язык интерфейса</p>
                         
                         <div class="language-selector">
                             <button class="lang-btn active" data-lang="ru" onclick="changeLanguage('ru')">Русский</button>
@@ -1200,15 +1196,15 @@
     <div id="game-over-modal" class="modal">
         <div class="modal-content">
             <h2 class="modal-title" id="modal-title">ПОБЕДА!</h2>
-            <p id="modal-subtitle" style="font-size: 1.1rem; margin-bottom: 15px;">Вы нашли все пары карт!</p>
+            <p id="modal-subtitle" style="font-size: 1rem; margin-bottom: 15px;">Вы нашли все пары карт!</p>
             
-            <div style="font-size: 1.3rem; margin: 20px 0; color: var(--accent-gold);">
+            <div style="font-size: 1.2rem; margin: 15px 0; color: var(--accent-gold);">
                 <div>Время: <span id="final-time">00:00</span></div>
                 <div>Найдено: <span id="final-pairs">0</span> из <span id="final-total-pairs">0</span> пар</div>
             </div>
             
             <div id="name-input-container">
-                <p id="modal-name-text" style="font-size: 1rem; margin-bottom: 10px;">Введите ваше имя для таблицы рекордов:</p>
+                <p id="modal-name-text" style="font-size: 0.9rem; margin-bottom: 10px;">Введите ваше имя для таблицы рекордов:</p>
                 <input type="text" id="player-name" class="modal-input" placeholder="Ваше имя" maxlength="20">
                 <button class="btn" onclick="saveRecord()" style="margin-top: 15px;" id="save-record-btn">Сохранить рекорд</button>
             </div>
@@ -1225,20 +1221,23 @@
         const gameTexts = {
             ru: {
                 // Главное меню
-                title: "CLASH OF CARDS",
-                subtitle: "FROM ALI_GOOD_GAMING",
-                classicMode: "Классический",
-                timedMode: "На время",
-                records: "Рекорды",
-                settings: "Настройки",
+                classicTitle: "Классический",
+                timedTitle: "На время",
+                recordsTitle: "Рекорды",
+                settingsTitle: "Настройки",
+                
+                classicDesc: "Найдите все пары без ограничения времени",
+                timedDesc: "Соревнуйтесь со временем и попадите в таблицу рекордов",
+                recordsDesc: "Лучшие результаты игроков",
+                settingsDesc: "Настройте игру под себя",
                 
                 // Классический режим
-                classicTitle: "КЛАССИЧЕСКИЙ",
-                chooseBoardSize: "Выберите размер поля",
+                classicModeTitle: "КЛАССИЧЕСКИЙ",
+                classicModeSubtitle: "Выберите размер поля",
                 
                 // Режим на время
-                timedTitle: "НА ВРЕМЯ",
-                chooseDifficulty: "Выберите уровень сложности",
+                timedModeTitle: "НА ВРЕМЯ",
+                timedModeSubtitle: "Выберите уровень сложности",
                 
                 // Игровой экран
                 pairsFound: "Найдено пар",
@@ -1249,21 +1248,48 @@
                 back: "Назад",
                 
                 // Рекорды
-                recordsTitle: "РЕКОРДЫ",
-                bestResults: "Лучшие результаты в режиме \"На время\"",
+                recordsTitlePage: "РЕКОРДЫ",
+                recordsSubtitle: "Лучшие результаты в режиме \"На время\"",
                 clearRecords: "Очистить рекорды",
+                place: "Место",
+                name: "Имя",
+                timeHeader: "Время",
+                pairsHeader: "Пар",
+                date: "Дата",
                 
                 // Настройки
-                settingsTitle: "НАСТРОЙКИ",
-                customizeGame: "Настройте игру под себя",
-                appearance: "Внешний вид",
-                sound: "Звук",
-                language: "Язык",
+                settingsTitlePage: "НАСТРОЙКИ",
+                settingsSubtitle: "Настройте игру под себя",
+                appearanceTitle: "Внешний вид",
+                appearanceDesc: "Настройте яркость и прозрачность интерфейса",
+                soundTitle: "Звук",
+                soundDesc: "Настройте звуковые эффекты игры",
+                languageTitle: "Язык",
+                languageDesc: "Выберите язык интерфейса",
                 brightness: "Яркость фона",
                 opacity: "Прозрачность меню",
                 volume: "Громкость",
                 soundOn: "Звук включен",
                 soundOff: "Звук выключен",
+                
+                // Кастомный выбор
+                customModeTitle: "НАСТРОЙКА",
+                customModeSubtitle: "Выберите количество пар от 4 до 25",
+                pairsLabel: "Количество пар:",
+                startGame: "Начать игру",
+                
+                // Описания
+                easyDesc: "Легкий уровень, идеально для начала",
+                mediumDesc: "Средняя сложность, больше карт",
+                hardDesc: "Сложный уровень, максимум пар",
+                customizeTitle: "Настроить",
+                customizeDesc: "Выберите свое количество пар",
+                fastTitle: "Быстрый",
+                fastDesc: "8 пар, до 2 минут",
+                normalTitle: "Средний",
+                normalDesc: "15 пар, до 4 минут",
+                expertTitle: "Эксперт",
+                expertDesc: "25 пар, до 6 минут",
                 
                 // Модальное окно
                 victory: "ПОБЕДА!",
@@ -1271,37 +1297,27 @@
                 enterName: "Введите ваше имя для таблицы рекордов:",
                 saveRecord: "Сохранить рекорд",
                 close: "Закрыть",
-                newGame: "Новая игра",
-                
-                // Описания
-                classicDesc: "Найдите все пары без ограничения времени",
-                timedDesc: "Соревнуйтесь со временем и попадите в таблицу рекордов",
-                recordsDesc: "Лучшие результаты игроков",
-                settingsDesc: "Настройте игру под себя",
-                easyLevel: "Легкий уровень, идеально для начала",
-                mediumLevel: "Средняя сложность, больше карт",
-                hardLevel: "Сложный уровень, максимум пар",
-                customizeDesc: "Выберите свое количество пар",
-                fastMode: "8 пар, до 2 минут",
-                normalMode: "15 пар, до 4 минут",
-                expertMode: "25 пар, до 6 минут"
+                newGame: "Новая игра"
             },
             en: {
                 // Main menu
-                title: "CLASH OF CARDS",
-                subtitle: "FROM ALI_GOOD_GAMING",
-                classicMode: "Classic",
-                timedMode: "Timed",
-                records: "Records",
-                settings: "Settings",
+                classicTitle: "Classic",
+                timedTitle: "Timed",
+                recordsTitle: "Records",
+                settingsTitle: "Settings",
+                
+                classicDesc: "Find all pairs without time limit",
+                timedDesc: "Compete against time and get on the leaderboard",
+                recordsDesc: "Best player results",
+                settingsDesc: "Customize the game",
                 
                 // Classic mode
-                classicTitle: "CLASSIC",
-                chooseBoardSize: "Choose board size",
+                classicModeTitle: "CLASSIC",
+                classicModeSubtitle: "Choose board size",
                 
                 // Timed mode
-                timedTitle: "TIMED",
-                chooseDifficulty: "Choose difficulty level",
+                timedModeTitle: "TIMED",
+                timedModeSubtitle: "Choose difficulty level",
                 
                 // Game screen
                 pairsFound: "Pairs found",
@@ -1312,21 +1328,48 @@
                 back: "Back",
                 
                 // Records
-                recordsTitle: "RECORDS",
-                bestResults: "Best results in \"Timed\" mode",
+                recordsTitlePage: "RECORDS",
+                recordsSubtitle: "Best results in \"Timed\" mode",
                 clearRecords: "Clear records",
+                place: "Place",
+                name: "Name",
+                timeHeader: "Time",
+                pairsHeader: "Pairs",
+                date: "Date",
                 
                 // Settings
-                settingsTitle: "SETTINGS",
-                customizeGame: "Customize the game",
-                appearance: "Appearance",
-                sound: "Sound",
-                language: "Language",
+                settingsTitlePage: "SETTINGS",
+                settingsSubtitle: "Customize the game",
+                appearanceTitle: "Appearance",
+                appearanceDesc: "Adjust brightness and opacity",
+                soundTitle: "Sound",
+                soundDesc: "Adjust sound effects",
+                languageTitle: "Language",
+                languageDesc: "Choose interface language",
                 brightness: "Background brightness",
                 opacity: "Menu opacity",
                 volume: "Volume",
                 soundOn: "Sound on",
                 soundOff: "Sound off",
+                
+                // Custom selection
+                customModeTitle: "CUSTOMIZE",
+                customModeSubtitle: "Choose number of pairs from 4 to 25",
+                pairsLabel: "Number of pairs:",
+                startGame: "Start game",
+                
+                // Descriptions
+                easyDesc: "Easy level, perfect for beginners",
+                mediumDesc: "Medium difficulty, more cards",
+                hardDesc: "Hard level, maximum pairs",
+                customizeTitle: "Customize",
+                customizeDesc: "Choose your number of pairs",
+                fastTitle: "Fast",
+                fastDesc: "8 pairs, up to 2 minutes",
+                normalTitle: "Medium",
+                normalDesc: "15 pairs, up to 4 minutes",
+                expertTitle: "Expert",
+                expertDesc: "25 pairs, up to 6 minutes",
                 
                 // Modal window
                 victory: "VICTORY!",
@@ -1334,20 +1377,7 @@
                 enterName: "Enter your name for the leaderboard:",
                 saveRecord: "Save record",
                 close: "Close",
-                newGame: "New game",
-                
-                // Descriptions
-                classicDesc: "Find all pairs without time limit",
-                timedDesc: "Compete against time and get on the leaderboard",
-                recordsDesc: "Best player results",
-                settingsDesc: "Customize the game for yourself",
-                easyLevel: "Easy level, perfect for beginners",
-                mediumLevel: "Medium difficulty, more cards",
-                hardLevel: "Hard level, maximum pairs",
-                customizeDesc: "Choose your number of pairs",
-                fastMode: "8 pairs, up to 2 minutes",
-                normalMode: "15 pairs, up to 4 minutes",
-                expertMode: "25 pairs, up to 6 minutes"
+                newGame: "New game"
             }
         };
 
@@ -1372,7 +1402,7 @@
         // Настройки
         let settings = {
             brightness: 100,
-            opacity: 70,
+            opacity: 85,
             volume: 70,
             soundEnabled: true,
             language: 'ru'
@@ -1387,9 +1417,6 @@
             
             // Установка фона
             updateBackground();
-            
-            // Начальный размер карточек
-            updateCardSize();
         });
         
         // Настройка обработчиков событий
@@ -1397,21 +1424,21 @@
             // Ползунки настроек
             document.getElementById('brightness-slider').addEventListener('input', function() {
                 settings.brightness = this.value;
-                document.getElementById('brightness-value').textContent = this.value + '%';
+                document.getElementById('brightness-value-text').textContent = this.value + '%';
                 updateBackground();
                 saveSettings();
             });
             
             document.getElementById('opacity-slider').addEventListener('input', function() {
                 settings.opacity = this.value;
-                document.getElementById('opacity-value').textContent = this.value + '%';
+                document.getElementById('opacity-value-text').textContent = this.value + '%';
                 updateBackground();
                 saveSettings();
             });
             
             document.getElementById('volume-slider').addEventListener('input', function() {
                 settings.volume = this.value;
-                document.getElementById('volume-value').textContent = this.value + '%';
+                document.getElementById('volume-value-text').textContent = this.value + '%';
                 gameState.volume = settings.volume / 100;
                 saveSettings();
             });
@@ -1454,9 +1481,6 @@
         // Показать кастомный выбор размера
         function showCustomSize(mode) {
             gameState.currentMode = mode;
-            const title = document.getElementById('custom-mode-title');
-            const texts = gameTexts[settings.language];
-            title.textContent = mode === 'classic' ? texts.classicTitle : texts.timedTitle;
             showScreen('custom-size-screen');
         }
         
@@ -1498,7 +1522,7 @@
             // Устанавливаем метку режима
             const modeLabel = document.getElementById('game-mode-label');
             const texts = gameTexts[settings.language];
-            modeLabel.textContent = mode === 'classic' ? texts.classicMode : texts.timedMode;
+            modeLabel.textContent = mode === 'classic' ? texts.classicModeTitle : texts.timedModeTitle;
             
             // Показываем или скрываем таймер
             document.getElementById('timer-container').style.display = 
@@ -1524,14 +1548,14 @@
             const root = document.documentElement;
             
             if (pairsCount <= 8) {
-                root.style.setProperty('--card-width', '85px');
-                root.style.setProperty('--card-height', '120px');
+                root.style.setProperty('--card-width', '70px');
+                root.style.setProperty('--card-height', '98px');
             } else if (pairsCount <= 15) {
-                root.style.setProperty('--card-width', '75px');
-                root.style.setProperty('--card-height', '105px');
-            } else {
                 root.style.setProperty('--card-width', '65px');
-                root.style.setProperty('--card-height', '90px');
+                root.style.setProperty('--card-height', '91px');
+            } else {
+                root.style.setProperty('--card-width', '55px');
+                root.style.setProperty('--card-height', '77px');
             }
         }
         
@@ -1563,9 +1587,11 @@
                 card.dataset.cardId = cardId;
                 card.dataset.index = index;
                 
+                // Используем правильный путь к изображениям
+                const cardImagePath = `cards/${cardId}.png`;
                 card.innerHTML = `
                     <div class="card-front">
-                        <img src="cards/${cardId}.png" alt="Card ${cardId}" class="card-image" onerror="this.src='cards/card.png'">
+                        <img src="${cardImagePath}" alt="Card ${cardId}" class="card-image">
                     </div>
                     <div class="card-back"></div>
                 `;
@@ -1580,6 +1606,18 @@
                     matched: false,
                     index: index
                 });
+            });
+            
+            // Предзагрузка изображений для устранения задержек
+            preloadCardImages(selectedCards);
+        }
+        
+        // Предзагрузка изображений карт
+        function preloadCardImages(cardIds) {
+            const uniqueCardIds = [...new Set(cardIds)];
+            uniqueCardIds.forEach(cardId => {
+                const img = new Image();
+                img.src = `cards/${cardId}.png`;
             });
         }
         
@@ -1666,13 +1704,20 @@
             const pairsFoundElement = document.getElementById('pairs-found');
             const totalPairsElement = document.getElementById('total-pairs');
             const hintBtn = document.getElementById('hint-btn');
+            const hintCount = document.getElementById('hint-count');
             
             if (pairsFoundElement) pairsFoundElement.textContent = gameState.matchedPairs;
             if (totalPairsElement) totalPairsElement.textContent = gameState.totalPairs;
-            if (hintBtn) {
-                const texts = gameTexts[settings.language];
-                hintBtn.innerHTML = `<i class="fas fa-lightbulb"></i> ${texts.hint} (${gameState.hints})`;
-            }
+            if (hintCount) hintCount.textContent = gameState.hints;
+            
+            // Обновляем метки
+            const texts = gameTexts[settings.language];
+            document.getElementById('pairs-found-label').textContent = texts.pairsFound;
+            document.getElementById('total-pairs-label').textContent = texts.totalPairs;
+            document.getElementById('timer-label').textContent = texts.time;
+            document.getElementById('hint-text').textContent = texts.hint;
+            document.getElementById('restart-text').textContent = texts.restart;
+            document.getElementById('back-game-text').textContent = texts.back;
         }
         
         // Использовать подсказку
@@ -1849,7 +1894,7 @@
             if (records.length === 0) {
                 const row = document.createElement('tr');
                 const noRecordsText = settings.language === 'ru' ? 'Нет сохраненных рекордов' : 'No saved records';
-                row.innerHTML = `<td colspan="5" style="text-align: center; padding: 30px;">${noRecordsText}</td>`;
+                row.innerHTML = `<td colspan="5" style="text-align: center; padding: 20px;">${noRecordsText}</td>`;
                 recordsBody.appendChild(row);
             }
         }
@@ -1878,9 +1923,9 @@
             document.getElementById('opacity-slider').value = settings.opacity;
             document.getElementById('volume-slider').value = settings.volume;
             
-            document.getElementById('brightness-value').textContent = settings.brightness + '%';
-            document.getElementById('opacity-value').textContent = settings.opacity + '%';
-            document.getElementById('volume-value').textContent = settings.volume + '%';
+            document.getElementById('brightness-value-text').textContent = settings.brightness + '%';
+            document.getElementById('opacity-value-text').textContent = settings.opacity + '%';
+            document.getElementById('volume-value-text').textContent = settings.volume + '%';
             
             updateSoundButton();
             
@@ -1901,9 +1946,9 @@
         function updateSoundButton() {
             const soundBtn = document.getElementById('sound-toggle');
             const texts = gameTexts[settings.language];
-            soundBtn.innerHTML = settings.soundEnabled ? 
-                `<i class="fas fa-volume-up"></i> ${texts.soundOn}` : 
-                `<i class="fas fa-volume-mute"></i> ${texts.soundOff}`;
+            const icon = settings.soundEnabled ? 'volume-up' : 'volume-mute';
+            const text = settings.soundEnabled ? texts.soundOn : texts.soundOff;
+            soundBtn.innerHTML = `<i class="fas fa-${icon}"></i> <span id="sound-toggle-text">${text}</span>`;
         }
         
         function updateBackground() {
@@ -1935,82 +1980,97 @@
         function updateLanguage() {
             const texts = gameTexts[settings.language];
             
-            // Обновляем заголовки
-            document.querySelectorAll('[data-text-key]').forEach(element => {
-                const key = element.getAttribute('data-text-key');
-                if (texts[key]) {
-                    element.textContent = texts[key];
+            // Обновляем все текстовые элементы
+            const textElements = {
+                // Главное меню
+                'classic-title': texts.classicTitle,
+                'timed-title': texts.timedTitle,
+                'records-title': texts.recordsTitle,
+                'settings-title': texts.settingsTitle,
+                'classic-desc': texts.classicDesc,
+                'timed-desc': texts.timedDesc,
+                'records-desc': texts.recordsDesc,
+                'settings-desc': texts.settingsDesc,
+                
+                // Классический режим
+                'classic-mode-title': texts.classicModeTitle,
+                'classic-mode-subtitle': texts.classicModeSubtitle,
+                
+                // Режим на время
+                'timed-mode-title': texts.timedModeTitle,
+                'timed-mode-subtitle': texts.timedModeSubtitle,
+                
+                // Игровой экран
+                'pairs-found-label': texts.pairsFound,
+                'total-pairs-label': texts.totalPairs,
+                'timer-label': texts.time,
+                'hint-text': texts.hint,
+                'restart-text': texts.restart,
+                'back-game-text': texts.back,
+                
+                // Рекорды
+                'records-title-page': texts.recordsTitlePage,
+                'records-subtitle': texts.recordsSubtitle,
+                'clear-records-text': texts.clearRecords,
+                'place-header': texts.place,
+                'name-header': texts.name,
+                'time-header': texts.timeHeader,
+                'pairs-header': texts.pairsHeader,
+                'date-header': texts.date,
+                
+                // Настройки
+                'settings-title-page': texts.settingsTitlePage,
+                'settings-subtitle': texts.settingsSubtitle,
+                'appearance-title': texts.appearanceTitle,
+                'appearance-desc': texts.appearanceDesc,
+                'sound-title': texts.soundTitle,
+                'sound-desc': texts.soundDesc,
+                'language-title': texts.languageTitle,
+                'language-desc': texts.languageDesc,
+                'brightness-label': texts.brightness,
+                'opacity-label': texts.opacity,
+                'volume-label': texts.volume,
+                
+                // Кастомный выбор
+                'custom-mode-title': texts.customModeTitle,
+                'custom-mode-subtitle': texts.customModeSubtitle,
+                'pairs-label': texts.pairsLabel,
+                'start-game-btn': texts.startGame,
+                
+                // Описания
+                'easy-desc': texts.easyDesc,
+                'medium-desc': texts.mediumDesc,
+                'hard-desc': texts.hardDesc,
+                'customize-title': texts.customizeTitle,
+                'customize-desc': texts.customizeDesc,
+                'fast-title': texts.fastTitle,
+                'fast-desc': texts.fastDesc,
+                'normal-title': texts.normalTitle,
+                'normal-desc': texts.normalDesc,
+                'expert-title': texts.expertTitle,
+                'expert-desc': texts.expertDesc,
+                
+                // Кнопки назад
+                'back-text': texts.back,
+                'back-text-timed': texts.back,
+                'back-text-custom': texts.back,
+                'back-records-text': texts.back,
+                'back-settings-text': texts.back
+            };
+            
+            // Обновляем все текстовые элементы
+            for (const [id, text] of Object.entries(textElements)) {
+                const element = document.getElementById(id);
+                if (element) {
+                    element.textContent = text;
                 }
-            });
-            
-            // Главное меню
-            document.querySelectorAll('.title').forEach(title => {
-                if (title.id !== 'custom-mode-title') {
-                    if (title.textContent.includes('CLASH OF CARDS')) {
-                        title.textContent = texts.title;
-                    }
-                }
-            });
-            
-            document.querySelectorAll('.subtitle').forEach(subtitle => {
-                if (subtitle.textContent.includes('FROM')) {
-                    subtitle.textContent = texts.subtitle;
-                }
-            });
-            
-            // Классический режим
-            const classicTitle = document.querySelector('#classic-screen .title');
-            if (classicTitle) classicTitle.textContent = texts.classicTitle;
-            
-            const classicSubtitle = document.querySelector('#classic-screen .subtitle');
-            if (classicSubtitle) classicSubtitle.textContent = texts.chooseBoardSize;
-            
-            // Режим на время
-            const timedTitle = document.querySelector('#timed-screen .title');
-            if (timedTitle) timedTitle.textContent = texts.timedTitle;
-            
-            const timedSubtitle = document.querySelector('#timed-screen .subtitle');
-            if (timedSubtitle) timedSubtitle.textContent = texts.chooseDifficulty;
-            
-            // Рекорды
-            const recordsTitle = document.querySelector('#records-screen .title');
-            if (recordsTitle) recordsTitle.textContent = texts.recordsTitle;
-            
-            const recordsSubtitle = document.querySelector('#records-screen .subtitle');
-            if (recordsSubtitle) recordsSubtitle.textContent = texts.bestResults;
-            
-            // Настройки
-            const settingsTitle = document.querySelector('#settings-screen .title');
-            if (settingsTitle) settingsTitle.textContent = texts.settingsTitle;
-            
-            const settingsSubtitle = document.querySelector('#settings-screen .subtitle');
-            if (settingsSubtitle) settingsSubtitle.textContent = texts.customizeGame;
-            
-            // Кнопки
-            const clearRecordsBtn = document.querySelector('#records-screen .btn');
-            if (clearRecordsBtn && clearRecordsBtn.textContent.includes('Очистить')) {
-                clearRecordsBtn.innerHTML = `<i class="fas fa-trash"></i> ${texts.clearRecords}`;
             }
-            
-            // Обновляем метки статистики в игре
-            const statLabels = document.querySelectorAll('.stat-label');
-            if (statLabels.length >= 3) {
-                statLabels[0].textContent = texts.pairsFound;
-                statLabels[1].textContent = texts.totalPairs;
-                statLabels[2].textContent = texts.time;
-            }
-            
-            // Обновляем кнопку подсказки
-            updateGameInfo();
             
             // Обновляем кнопку звука
             updateSoundButton();
             
-            // Обновляем кнопки режимов
-            updateModeButtons();
-            
-            // Обновляем описания размеров
-            updateSizeDescriptions();
+            // Обновляем статистику в игре
+            updateGameInfo();
         }
         
         function updateModalTexts() {
@@ -2023,42 +2083,6 @@
             document.getElementById('save-record-btn').textContent = texts.saveRecord;
             document.getElementById('close-modal-btn').textContent = texts.close;
             document.getElementById('new-game-btn').textContent = texts.newGame;
-        }
-        
-        function updateModeButtons() {
-            const texts = gameTexts[settings.language];
-            const modeButtons = document.querySelectorAll('.mode-btn-title');
-            const modeDescs = document.querySelectorAll('.mode-btn-desc');
-            
-            if (modeButtons.length >= 4) {
-                modeButtons[0].textContent = texts.classicMode;
-                modeButtons[1].textContent = texts.timedMode;
-                modeButtons[2].textContent = texts.records;
-                modeButtons[3].textContent = texts.settings;
-            }
-            
-            if (modeDescs.length >= 4) {
-                modeDescs[0].textContent = texts.classicDesc;
-                modeDescs[1].textContent = texts.timedDesc;
-                modeDescs[2].textContent = texts.recordsDesc;
-                modeDescs[3].textContent = texts.settingsDesc;
-            }
-        }
-        
-        function updateSizeDescriptions() {
-            const texts = gameTexts[settings.language];
-            const sizeDescs = document.querySelectorAll('.size-desc');
-            
-            if (sizeDescs.length >= 8) {
-                sizeDescs[0].textContent = texts.easyLevel;
-                sizeDescs[1].textContent = texts.mediumLevel;
-                sizeDescs[2].textContent = texts.hardLevel;
-                sizeDescs[3].textContent = texts.customizeDesc;
-                sizeDescs[4].textContent = texts.fastMode;
-                sizeDescs[5].textContent = texts.normalMode;
-                sizeDescs[6].textContent = texts.expertMode;
-                sizeDescs[7].textContent = texts.customizeDesc;
-            }
         }
         
         // Звуковые эффекты
@@ -2075,9 +2099,9 @@
                 
                 switch(type) {
                     case 'flip':
-                        oscillator.frequency.setValueAtTime(800, audioContext.currentTime);
-                        oscillator.frequency.exponentialRampToValueAtTime(400, audioContext.currentTime + 0.1);
-                        gainNode.gain.setValueAtTime(gameState.volume * 0.3, audioContext.currentTime);
+                        oscillator.frequency.setValueAtTime(600, audioContext.currentTime);
+                        oscillator.frequency.exponentialRampToValueAtTime(300, audioContext.currentTime + 0.1);
+                        gainNode.gain.setValueAtTime(gameState.volume * 0.2, audioContext.currentTime);
                         gainNode.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + 0.2);
                         break;
                         
@@ -2085,14 +2109,14 @@
                         oscillator.frequency.setValueAtTime(523.25, audioContext.currentTime);
                         oscillator.frequency.setValueAtTime(659.25, audioContext.currentTime + 0.1);
                         oscillator.frequency.setValueAtTime(783.99, audioContext.currentTime + 0.2);
-                        gainNode.gain.setValueAtTime(gameState.volume * 0.5, audioContext.currentTime);
+                        gainNode.gain.setValueAtTime(gameState.volume * 0.4, audioContext.currentTime);
                         gainNode.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + 0.3);
                         break;
                         
                     case 'mismatch':
-                        oscillator.frequency.setValueAtTime(400, audioContext.currentTime);
-                        oscillator.frequency.exponentialRampToValueAtTime(200, audioContext.currentTime + 0.2);
-                        gainNode.gain.setValueAtTime(gameState.volume * 0.2, audioContext.currentTime);
+                        oscillator.frequency.setValueAtTime(300, audioContext.currentTime);
+                        oscillator.frequency.exponentialRampToValueAtTime(150, audioContext.currentTime + 0.2);
+                        gainNode.gain.setValueAtTime(gameState.volume * 0.15, audioContext.currentTime);
                         gainNode.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + 0.3);
                         break;
                         
@@ -2105,14 +2129,14 @@
                         });
                         
                         gainNode.gain.setValueAtTime(0, currentTime);
-                        gainNode.gain.linearRampToValueAtTime(gameState.volume * 0.7, currentTime + 0.05);
+                        gainNode.gain.linearRampToValueAtTime(gameState.volume * 0.6, currentTime + 0.05);
                         gainNode.gain.exponentialRampToValueAtTime(0.001, currentTime + 0.6);
                         break;
                         
                     case 'hint':
-                        oscillator.frequency.setValueAtTime(987.77, audioContext.currentTime);
-                        oscillator.frequency.setValueAtTime(1318.51, audioContext.currentTime + 0.1);
-                        gainNode.gain.setValueAtTime(gameState.volume * 0.4, audioContext.currentTime);
+                        oscillator.frequency.setValueAtTime(800, audioContext.currentTime);
+                        oscillator.frequency.setValueAtTime(1000, audioContext.currentTime + 0.1);
+                        gainNode.gain.setValueAtTime(gameState.volume * 0.3, audioContext.currentTime);
                         gainNode.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + 0.2);
                         break;
                 }
@@ -2120,7 +2144,7 @@
                 oscillator.start();
                 oscillator.stop(audioContext.currentTime + 0.5);
             } catch (e) {
-                console.log('Аудио недоступно:', e);
+                console.log('Аудио недоступно');
             }
         }
     </script>
