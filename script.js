@@ -9,8 +9,7 @@ let gameState = {
     timer: 0,
     timerInterval: null,
     isPlaying: false,
-    hints: 3, // Будет меняться в зависимости от сложности
-    canUseHint: true,
+    hints: 3,
     selectedCards: [],
     settings: {
         theme: 'default',
@@ -55,7 +54,13 @@ const texts = {
         theme: "Тема игры",
         sound: "Звук",
         language: "Язык",
-        social: "Мои соц сети"
+        social: "Мои соц сети",
+        noRecords: "Пока нет рекордов!",
+        confirmFinish: "Завершить текущую игру?",
+        confirmClear: "Очистить все рекорды?",
+        playerName: "Игрок",
+        openOneCard: "Откройте одну карту для использования подсказки",
+        noHints: "Подсказки закончились"
     },
     en: {
         gameTitle: "CLASH OF CARDS",
@@ -91,7 +96,13 @@ const texts = {
         theme: "Game Theme",
         sound: "Sound",
         language: "Language",
-        social: "My Social Media"
+        social: "My Social Media",
+        noRecords: "No records yet!",
+        confirmFinish: "Finish current game?",
+        confirmClear: "Clear all records?",
+        playerName: "Player",
+        openOneCard: "Open one card to use hint",
+        noHints: "No hints left"
     }
 };
 
@@ -157,8 +168,7 @@ function goBack() {
             showScreen('modeSelection');
             break;
         case 'gameBoard':
-            if (confirm(gameState.settings.language === 'ru' ? 
-                'Завершить текущую игру?' : 'Finish current game?')) {
+            if (confirm(texts[gameState.settings.language].confirmFinish)) {
                 endGame(false);
             }
             break;
@@ -223,7 +233,6 @@ function startGame() {
     gameState.flippedCards = [];
     gameState.selectedCards = [];
     gameState.isPlaying = true;
-    gameState.canUseHint = true;
     
     // Update UI
     document.getElementById('remainingPairs').textContent = gameState.pairs;
@@ -317,11 +326,6 @@ function flipCard(index) {
     cardWrapper.classList.add('flipped');
     gameState.flippedCards.push({index, cardId});
     
-    // Enable hint if one card is flipped
-    if (gameState.flippedCards.length === 1) {
-        gameState.canUseHint = true;
-    }
-    
     // Check for match
     if (gameState.flippedCards.length === 2) {
         gameState.moves++;
@@ -353,9 +357,6 @@ function flipCard(index) {
                 
                 gameState.flippedCards = [];
                 
-                // Disable hint until next card is flipped
-                gameState.canUseHint = false;
-                
                 // Check for win
                 if (gameState.matchedPairs === gameState.pairs) {
                     setTimeout(() => endGame(true), 500);
@@ -371,21 +372,19 @@ function flipCard(index) {
                 card2Wrapper.classList.remove('flipped');
                 
                 gameState.flippedCards = [];
-                
-                // Enable hint again
-                gameState.canUseHint = false;
             }, 1000);
         }
     }
 }
 
 function useHint() {
-    if (!gameState.isPlaying || gameState.hints <= 0 || !gameState.canUseHint || gameState.flippedCards.length !== 1) {
-        // Show message if hint cannot be used
-        const message = gameState.settings.language === 'ru' 
-            ? 'Откройте одну карту для использования подсказки' 
-            : 'Open one card to use hint';
-        alert(message);
+    if (!gameState.isPlaying || gameState.hints <= 0) {
+        alert(texts[gameState.settings.language].noHints);
+        return;
+    }
+    
+    if (gameState.flippedCards.length !== 1) {
+        alert(texts[gameState.settings.language].openOneCard);
         return;
     }
     
@@ -404,28 +403,44 @@ function useHint() {
     // Find the matching card
     let matchingCardIndex = -1;
     gameState.cards.forEach((cardId, index) => {
-        if (cardId === flippedCardId && index !== flippedCard.index) {
+        if (cardId === flippedCardId && index !== flippedCard.index && 
+            !document.querySelector(`.card-wrapper[data-index="${index}"]`).classList.contains('matched')) {
             matchingCardIndex = index;
         }
     });
     
     if (matchingCardIndex !== -1) {
-        // Highlight the matching card
+        // Flip the matching card automatically
         const matchingCard = document.querySelector(`.card-wrapper[data-index="${matchingCardIndex}"]`);
         
         if (matchingCard && !matchingCard.classList.contains('flipped') && !matchingCard.classList.contains('matched')) {
-            matchingCard.classList.add('hint-active');
+            // Flip the matching card
+            matchingCard.classList.add('flipped');
+            gameState.flippedCards.push({index: matchingCardIndex, cardId: flippedCardId});
             
-            // Flip the card after a delay
+            // Check for match (they will match since we found the pair)
             setTimeout(() => {
-                matchingCard.classList.remove('hint-active');
-                flipCard(matchingCardIndex);
-            }, 1500);
+                const firstCard = document.querySelector(`.card-wrapper[data-index="${flippedCard.index}"]`);
+                firstCard.classList.add('matched');
+                matchingCard.classList.add('matched');
+                
+                gameState.matchedPairs++;
+                
+                // Update remaining pairs
+                const pairsElement = document.getElementById('remainingPairs');
+                pairsElement.textContent = gameState.pairs - gameState.matchedPairs;
+                pairsElement.classList.add('pulse');
+                setTimeout(() => pairsElement.classList.remove('pulse'), 500);
+                
+                gameState.flippedCards = [];
+                
+                // Check for win
+                if (gameState.matchedPairs === gameState.pairs) {
+                    setTimeout(() => endGame(true), 500);
+                }
+            }, 600);
         }
     }
-    
-    // Disable hint until next card is flipped
-    gameState.canUseHint = false;
 }
 
 // Timer functions
@@ -472,8 +487,8 @@ function endGame(isWin = false) {
         // Update results screen
         document.getElementById('resultMode').textContent = 
             gameState.mode === 'classic' ? 
-            (gameState.settings.language === 'ru' ? 'Классический' : 'Classic') :
-            (gameState.settings.language === 'ru' ? 'На время' : 'Timed');
+            texts[gameState.settings.language].classicMode :
+            texts[gameState.settings.language].timedMode;
         
         document.getElementById('resultTime').textContent = 
             document.getElementById('timer').textContent;
@@ -484,9 +499,16 @@ function endGame(isWin = false) {
         document.getElementById('resultDate').textContent = 
             now.toLocaleDateString(gameState.settings.language === 'ru' ? 'ru-RU' : 'en-US');
         
-        // Show name input only for timed mode
+        // Show name input and save button only for timed mode
         const nameInputContainer = document.getElementById('nameInputContainer');
-        nameInputContainer.style.display = gameState.mode === 'timed' ? 'block' : 'none';
+        const saveResultButton = document.getElementById('saveResultButton');
+        if (gameState.mode === 'timed') {
+            nameInputContainer.style.display = 'block';
+            saveResultButton.style.display = 'inline-flex';
+        } else {
+            nameInputContainer.style.display = 'none';
+            saveResultButton.style.display = 'none';
+        }
         
         showScreen('resultsScreen');
     } else {
@@ -501,8 +523,7 @@ function saveResult() {
         return;
     }
     
-    const playerName = document.getElementById('playerName').value || 
-        (gameState.settings.language === 'ru' ? 'Игрок' : 'Player');
+    const playerName = document.getElementById('playerName').value || texts[gameState.settings.language].playerName;
     
     const record = {
         name: playerName,
@@ -519,6 +540,8 @@ function saveResult() {
 
 function saveRecord(record) {
     const records = JSON.parse(localStorage.getItem('clashOfCardsRecords') || '[]');
+    
+    // Add new record
     records.push(record);
     
     // Sort by time (ascending) for timed mode
@@ -530,11 +553,12 @@ function saveRecord(record) {
     });
     
     // Keep only top 20 records
-    if (records.length > 20) {
-        records.length = 20;
-    }
+    const timedRecords = records.filter(r => r.mode === 'timed');
+    const classicRecords = records.filter(r => r.mode === 'classic');
     
-    localStorage.setItem('clashOfCardsRecords', JSON.stringify(records));
+    const allRecords = [...timedRecords.slice(0, 10), ...classicRecords.slice(0, 10)];
+    
+    localStorage.setItem('clashOfCardsRecords', JSON.stringify(allRecords));
 }
 
 function loadRecords() {
@@ -544,10 +568,11 @@ function loadRecords() {
 function displayRecords() {
     const records = loadRecords();
     const recordsList = document.getElementById('recordsList');
+    const lang = gameState.settings.language;
     
     if (records.length === 0) {
         recordsList.innerHTML = `<div style="text-align: center; padding: 40px; color: #aaa;">
-            ${gameState.settings.language === 'ru' ? 'Пока нет рекордов!' : 'No records yet!'}
+            ${texts[lang].noRecords}
         </div>`;
         return;
     }
@@ -558,16 +583,14 @@ function displayRecords() {
         const minutes = Math.floor(record.time / 60);
         const seconds = record.time % 60;
         const timeStr = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-        const modeText = record.mode === 'classic' ? 
-            (gameState.settings.language === 'ru' ? 'Классический' : 'Classic') : 
-            (gameState.settings.language === 'ru' ? 'На время' : 'Timed');
+        const modeText = record.mode === 'classic' ? texts[lang].classicMode : texts[lang].timedMode;
         
         html += `
             <div class="record-item">
-                <div style="font-size: 1.5rem; font-weight: bold; color: ${index < 3 ? '#ffd700' : '#fff'}">#${index + 1}</div>
-                <div style="font-size: 1.2rem;">${record.name}</div>
+                <div style="font-size: 1.3rem; font-weight: bold; color: ${index < 3 ? '#ffd700' : '#fff'}">#${index + 1}</div>
+                <div style="font-size: 1.1rem;">${record.name}</div>
                 <div><strong>${timeStr}</strong><br><small>${modeText}</small></div>
-                <div>${date.toLocaleDateString(gameState.settings.language === 'ru' ? 'ru-RU' : 'en-US')}</div>
+                <div>${date.toLocaleDateString(lang === 'ru' ? 'ru-RU' : 'en-US')}</div>
             </div>
         `;
     });
@@ -576,8 +599,7 @@ function displayRecords() {
 }
 
 function clearRecords() {
-    if (confirm(gameState.settings.language === 'ru' ? 
-        'Очистить все рекорды?' : 'Clear all records?')) {
+    if (confirm(texts[gameState.settings.language].confirmClear)) {
         localStorage.removeItem('clashOfCardsRecords');
         displayRecords();
     }
@@ -601,7 +623,7 @@ function loadSettings() {
     const langOptions = document.querySelectorAll('.language-option');
     langOptions.forEach(option => {
         option.classList.remove('selected');
-        if (option.textContent === (gameState.settings.language === 'ru' ? 'Русский' : 'English')) {
+        if (option.dataset.lang === gameState.settings.language) {
             option.classList.add('selected');
         }
     });
@@ -619,7 +641,8 @@ function selectTheme(theme, initial = false) {
         red: {primary: '#ff416c', secondary: '#ff4b2b', accent: '#6a11cb'},
         green: {primary: '#11998e', secondary: '#38ef7d', accent: '#ff416c'},
         orange: {primary: '#f46b45', secondary: '#eea849', accent: '#6a11cb'},
-        purple: {primary: '#8e2de2', secondary: '#4a00e0', accent: '#ff416c'}
+        purple: {primary: '#8e2de2', secondary: '#4a00e0', accent: '#ff416c'},
+        gold: {primary: '#FFD700', secondary: '#FFA500', accent: '#ff416c'}
     };
     
     const colors = themes[theme];
@@ -635,10 +658,9 @@ function selectTheme(theme, initial = false) {
             color.classList.remove('selected');
         });
         
-        const themeColors = document.querySelectorAll('.theme-color');
-        const themeIndex = ['default', 'red', 'green', 'orange', 'purple'].indexOf(theme);
-        if (themeIndex !== -1) {
-            themeColors[themeIndex].classList.add('selected');
+        const themeElement = document.querySelector(`.theme-color[onclick*="${theme}"]`);
+        if (themeElement) {
+            themeElement.classList.add('selected');
         }
         
         saveSettings();
@@ -662,47 +684,87 @@ function updateLanguage() {
     const lang = gameState.settings.language;
     const t = texts[lang];
     
+    // Update all text elements with data-lang
+    document.querySelectorAll('[data-lang]').forEach(element => {
+        const key = element.getAttribute('data-lang');
+        if (t[key]) {
+            element.textContent = t[key];
+        }
+    });
+    
+    // Update language buttons
+    document.querySelectorAll('.language-option').forEach(option => {
+        option.classList.remove('selected');
+        if (option.getAttribute('data-lang') === lang) {
+            option.classList.add('selected');
+        }
+    });
+    
     // Update specific elements
-    const subtitle = document.querySelector('.subtitle');
-    if (subtitle) subtitle.textContent = t.author;
+    const elements = {
+        '.subtitle': 'author',
+        '.mode-title': 'selectMode',
+        '.settings-title': 'gameSettings',
+        '.results-title': 'gameComplete',
+        '.records-title': 'recordsTitle',
+        '#settingsScreen .settings-title': 'settingsTitle',
+        '.social-title': 'social',
+        '#remainingPairs': 'remainingPairs',
+        '#movesCount': 'moves',
+        '#timer': 'time',
+        '#hintsCount': 'hints',
+        '#resultMode': 'mode',
+        '#resultTime': 'time',
+        '#resultMoves': 'moves',
+        '#resultDate': 'date'
+    };
     
-    // Update buttons in main menu
-    const playBtn = document.querySelector('.menu-buttons .btn:nth-child(1)');
-    if (playBtn) playBtn.innerHTML = `<i class="fas fa-play-circle"></i> ${t.play}`;
+    for (const [selector, key] of Object.entries(elements)) {
+        const element = document.querySelector(selector);
+        if (element && t[key]) {
+            if (selector.startsWith('#')) {
+                // This is a value element, not a label
+                continue;
+            }
+            element.textContent = t[key];
+        }
+    }
     
-    const recordsBtn = document.querySelector('.menu-buttons .btn:nth-child(2)');
-    if (recordsBtn) recordsBtn.innerHTML = `<i class="fas fa-trophy"></i> ${t.records}`;
+    // Update buttons
+    const buttons = document.querySelectorAll('.btn');
+    buttons.forEach(btn => {
+        const btnText = btn.textContent.trim();
+        
+        if (btnText.includes('Играть') || btnText.includes('Play')) {
+            btn.innerHTML = `<i class="${btn.querySelector('i')?.className || 'fas fa-play-circle'}"></i> ${t.play}`;
+        } else if (btnText.includes('Рекорды') || btnText.includes('Records')) {
+            btn.innerHTML = `<i class="${btn.querySelector('i')?.className || 'fas fa-trophy'}"></i> ${t.records}`;
+        } else if (btnText.includes('Настройки') || btnText.includes('Settings')) {
+            btn.innerHTML = `<i class="${btn.querySelector('i')?.className || 'fas fa-cog'}"></i> ${t.settings}`;
+        } else if (btnText.includes('Назад') || btnText.includes('Back')) {
+            btn.innerHTML = `<i class="${btn.querySelector('i')?.className || 'fas fa-arrow-left'}"></i> ${t.back}`;
+        } else if (btnText.includes('Подсказка') || btnText.includes('Hint')) {
+            btn.innerHTML = `<i class="${btn.querySelector('i')?.className || 'fas fa-lightbulb'}"></i> ${t.hint}`;
+        } else if (btnText.includes('Завершить') || btnText.includes('Finish')) {
+            btn.innerHTML = `<i class="${btn.querySelector('i')?.className || 'fas fa-stop-circle'}"></i> ${t.finish}`;
+        } else if (btnText.includes('Сохранить результат') || btnText.includes('Save Result')) {
+            btn.innerHTML = `<i class="${btn.querySelector('i')?.className || 'fas fa-save'}"></i> ${t.saveResult}`;
+        } else if (btnText.includes('В главное меню') || btnText.includes('Main Menu')) {
+            btn.innerHTML = `<i class="${btn.querySelector('i')?.className || 'fas fa-home'}"></i> ${t.mainMenu}`;
+        } else if (btnText.includes('Очистить рекорды') || btnText.includes('Clear Records')) {
+            btn.innerHTML = `<i class="${btn.querySelector('i')?.className || 'fas fa-trash'}"></i> ${t.clearRecords}`;
+        } else if (btnText.includes('Начать игру!') || btnText.includes('Start Game!')) {
+            btn.innerHTML = `<i class="${btn.querySelector('i')?.className || 'fas fa-rocket'}"></i> ${t.startGame}`;
+        } else if (btnText.includes('Выбрать') || btnText.includes('Select')) {
+            btn.innerHTML = `<i class="${btn.querySelector('i')?.className || 'fas fa-check'}"></i> ${t.play}`;
+        }
+    });
     
-    const settingsBtn = document.querySelector('.menu-buttons .btn:nth-child(3)');
-    if (settingsBtn) settingsBtn.innerHTML = `<i class="fas fa-cog"></i> ${t.settings}`;
-    
-    // Update back button
-    const backBtn = document.querySelector('.btn-back');
-    if (backBtn) backBtn.innerHTML = `<i class="fas fa-arrow-left"></i> ${t.back}`;
-    
-    // Update mode selection
-    const modeTitle = document.querySelector('.mode-title');
-    if (modeTitle) modeTitle.textContent = t.selectMode;
-    
-    // Update game settings
-    const settingsTitle = document.querySelector('.settings-title');
-    if (settingsTitle) settingsTitle.textContent = t.gameSettings;
-    
-    // Update results screen
-    const resultsTitle = document.querySelector('.results-title');
-    if (resultsTitle) resultsTitle.textContent = t.gameComplete;
-    
-    // Update records screen
-    const recordsTitle = document.querySelector('.records-title');
-    if (recordsTitle) recordsTitle.textContent = t.recordsTitle;
-    
-    // Update settings screen
-    const settingsScreenTitle = document.querySelector('#settingsScreen .settings-title');
-    if (settingsScreenTitle) settingsScreenTitle.textContent = t.settingsTitle;
-    
-    // Update social media title
-    const socialTitle = document.querySelector('.social-title');
-    if (socialTitle) socialTitle.textContent = t.social;
+    // Update input placeholder
+    const nameInput = document.getElementById('playerName');
+    if (nameInput) {
+        nameInput.placeholder = t.enterName;
+    }
 }
 
 // Utility functions
@@ -726,17 +788,17 @@ function createConfetti() {
         '#ffd700', '#ffffff', '#00ff00'
     ];
     
-    for (let i = 0; i < 150; i++) {
+    for (let i = 0; i < 120; i++) {
         const confetti = document.createElement('div');
         confetti.className = 'confetti';
         
         const color = colors[Math.floor(Math.random() * colors.length)];
         confetti.style.backgroundColor = color;
         confetti.style.left = `${Math.random() * 100}vw`;
-        confetti.style.width = `${Math.random() * 10 + 5}px`;
-        confetti.style.height = `${Math.random() * 10 + 5}px`;
+        confetti.style.width = `${Math.random() * 8 + 4}px`;
+        confetti.style.height = `${Math.random() * 8 + 4}px`;
         
-        const animationDuration = Math.random() * 3 + 2;
+        const animationDuration = Math.random() * 2 + 1.5;
         confetti.style.animation = `fall ${animationDuration}s linear forwards`;
         
         container.appendChild(confetti);
