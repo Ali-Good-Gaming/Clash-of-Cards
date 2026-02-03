@@ -1,6 +1,6 @@
 // Game State
 let gameState = {
-    mode: 'classic', // 'classic' or 'timed'
+    mode: 'classic',
     pairs: 8,
     cards: [],
     flippedCards: [],
@@ -9,14 +9,9 @@ let gameState = {
     timer: 0,
     timerInterval: null,
     isPlaying: false,
-    hints: 3,
+    hints: 3, // Будет меняться в зависимости от сложности
+    canUseHint: true,
     selectedCards: [],
-    sounds: {
-        flip: null,
-        match: null,
-        win: null,
-        hint: null
-    },
     settings: {
         theme: 'default',
         volume: 50,
@@ -105,10 +100,23 @@ function init() {
     loadSettings();
     loadRecords();
     updateLanguage();
-    createSounds();
     
     // Set initial screen
     showScreen('mainMenu');
+    updateHeader();
+}
+
+// Update header based on screen
+function updateHeader() {
+    const currentScreen = document.querySelector('.screen.active').id;
+    
+    if (currentScreen === 'mainMenu') {
+        document.getElementById('mainHeader').style.display = 'flex';
+        document.getElementById('backHeader').style.display = 'none';
+    } else {
+        document.getElementById('mainHeader').style.display = 'none';
+        document.getElementById('backHeader').style.display = 'flex';
+    }
 }
 
 // Screen management
@@ -121,16 +129,22 @@ function showScreen(screenId) {
     // Show selected screen
     document.getElementById(screenId).classList.add('active');
     
+    // Update header
+    updateHeader();
+    
     // Special handling for specific screens
     if (screenId === 'gameBoard') {
         startGameTimer();
     } else if (screenId === 'recordsScreen') {
         displayRecords();
+    } else if (screenId === 'mainMenu') {
+        // Reset game state when returning to main menu
+        stopGameTimer();
+        gameState.isPlaying = false;
     }
 }
 
 function goBack() {
-    const screens = ['mainMenu', 'modeSelection', 'gameSettings', 'gameBoard', 'resultsScreen', 'recordsScreen', 'settingsScreen'];
     const currentScreen = document.querySelector('.screen.active').id;
     
     switch(currentScreen) {
@@ -145,7 +159,7 @@ function goBack() {
         case 'gameBoard':
             if (confirm(gameState.settings.language === 'ru' ? 
                 'Завершить текущую игру?' : 'Finish current game?')) {
-                endGame();
+                endGame(false);
             }
             break;
         case 'resultsScreen':
@@ -196,16 +210,33 @@ function startGame() {
     gameState.matchedPairs = 0;
     gameState.moves = 0;
     gameState.timer = 0;
-    gameState.hints = 3;
+    
+    // Set hints based on difficulty
+    if (gameState.pairs <= 8) {
+        gameState.hints = 3;
+    } else if (gameState.pairs <= 15) {
+        gameState.hints = 4;
+    } else {
+        gameState.hints = 5;
+    }
+    
     gameState.flippedCards = [];
     gameState.selectedCards = [];
     gameState.isPlaying = true;
+    gameState.canUseHint = true;
     
     // Update UI
     document.getElementById('remainingPairs').textContent = gameState.pairs;
     document.getElementById('movesCount').textContent = '0';
     document.getElementById('timer').textContent = '00:00';
     document.getElementById('hintsCount').textContent = gameState.hints;
+    
+    // Add pulse animation to stats
+    ['remainingPairs', 'movesCount', 'timer', 'hintsCount'].forEach(id => {
+        const element = document.getElementById(id);
+        element.classList.add('pulse');
+        setTimeout(() => element.classList.remove('pulse'), 500);
+    });
     
     // Generate cards
     generateCards();
@@ -282,24 +313,29 @@ function flipCard(index) {
         return;
     }
     
-    // Play sound
-    playSound('flip');
-    
     // Flip the card
     cardWrapper.classList.add('flipped');
     gameState.flippedCards.push({index, cardId});
     
+    // Enable hint if one card is flipped
+    if (gameState.flippedCards.length === 1) {
+        gameState.canUseHint = true;
+    }
+    
     // Check for match
     if (gameState.flippedCards.length === 2) {
         gameState.moves++;
-        document.getElementById('movesCount').textContent = gameState.moves;
+        
+        // Add pulse animation to moves counter
+        const movesElement = document.getElementById('movesCount');
+        movesElement.textContent = gameState.moves;
+        movesElement.classList.add('pulse');
+        setTimeout(() => movesElement.classList.remove('pulse'), 500);
         
         const [card1, card2] = gameState.flippedCards;
         
         if (card1.cardId === card2.cardId) {
             // Match found
-            playSound('match');
-            
             setTimeout(() => {
                 const card1Wrapper = document.querySelector(`.card-wrapper[data-index="${card1.index}"]`);
                 const card2Wrapper = document.querySelector(`.card-wrapper[data-index="${card2.index}"]`);
@@ -308,15 +344,23 @@ function flipCard(index) {
                 card2Wrapper.classList.add('matched');
                 
                 gameState.matchedPairs++;
-                document.getElementById('remainingPairs').textContent = gameState.pairs - gameState.matchedPairs;
+                
+                // Add pulse animation to remaining pairs counter
+                const pairsElement = document.getElementById('remainingPairs');
+                pairsElement.textContent = gameState.pairs - gameState.matchedPairs;
+                pairsElement.classList.add('pulse');
+                setTimeout(() => pairsElement.classList.remove('pulse'), 500);
                 
                 gameState.flippedCards = [];
                 
+                // Disable hint until next card is flipped
+                gameState.canUseHint = false;
+                
                 // Check for win
                 if (gameState.matchedPairs === gameState.pairs) {
-                    endGame(true);
+                    setTimeout(() => endGame(true), 500);
                 }
-            }, 500);
+            }, 600);
         } else {
             // No match
             setTimeout(() => {
@@ -327,34 +371,61 @@ function flipCard(index) {
                 card2Wrapper.classList.remove('flipped');
                 
                 gameState.flippedCards = [];
+                
+                // Enable hint again
+                gameState.canUseHint = false;
             }, 1000);
         }
     }
 }
 
 function useHint() {
-    if (!gameState.isPlaying || gameState.hints <= 0) return;
-    
-    playSound('hint');
+    if (!gameState.isPlaying || gameState.hints <= 0 || !gameState.canUseHint || gameState.flippedCards.length !== 1) {
+        // Show message if hint cannot be used
+        const message = gameState.settings.language === 'ru' 
+            ? 'Откройте одну карту для использования подсказки' 
+            : 'Open one card to use hint';
+        alert(message);
+        return;
+    }
     
     gameState.hints--;
-    document.getElementById('hintsCount').textContent = gameState.hints;
     
-    // Find all unmatched cards
-    const unmatchedCards = Array.from(document.querySelectorAll('.card-wrapper:not(.matched)'));
+    // Add pulse animation to hints counter
+    const hintsElement = document.getElementById('hintsCount');
+    hintsElement.textContent = gameState.hints;
+    hintsElement.classList.add('pulse');
+    setTimeout(() => hintsElement.classList.remove('pulse'), 500);
     
-    if (unmatchedCards.length === 0) return;
+    // Get the currently flipped card
+    const flippedCard = gameState.flippedCards[0];
+    const flippedCardId = flippedCard.cardId;
     
-    // Randomly select a card to highlight
-    const randomCard = unmatchedCards[Math.floor(Math.random() * unmatchedCards.length)];
+    // Find the matching card
+    let matchingCardIndex = -1;
+    gameState.cards.forEach((cardId, index) => {
+        if (cardId === flippedCardId && index !== flippedCard.index) {
+            matchingCardIndex = index;
+        }
+    });
     
-    // Add hint animation
-    randomCard.classList.add('hint-active');
+    if (matchingCardIndex !== -1) {
+        // Highlight the matching card
+        const matchingCard = document.querySelector(`.card-wrapper[data-index="${matchingCardIndex}"]`);
+        
+        if (matchingCard && !matchingCard.classList.contains('flipped') && !matchingCard.classList.contains('matched')) {
+            matchingCard.classList.add('hint-active');
+            
+            // Flip the card after a delay
+            setTimeout(() => {
+                matchingCard.classList.remove('hint-active');
+                flipCard(matchingCardIndex);
+            }, 1500);
+        }
+    }
     
-    // Remove hint after 2 seconds
-    setTimeout(() => {
-        randomCard.classList.remove('hint-active');
-    }, 2000);
+    // Disable hint until next card is flipped
+    gameState.canUseHint = false;
 }
 
 // Timer functions
@@ -373,8 +444,14 @@ function startGameTimer() {
 function updateTimerDisplay() {
     const minutes = Math.floor(gameState.timer / 60);
     const seconds = gameState.timer % 60;
-    document.getElementById('timer').textContent = 
-        `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+    const timerElement = document.getElementById('timer');
+    timerElement.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+    
+    // Add subtle pulse every 10 seconds
+    if (gameState.timer % 10 === 0) {
+        timerElement.classList.add('pulse');
+        setTimeout(() => timerElement.classList.remove('pulse'), 300);
+    }
 }
 
 function stopGameTimer() {
@@ -390,7 +467,6 @@ function endGame(isWin = false) {
     stopGameTimer();
     
     if (isWin) {
-        playSound('win');
         createConfetti();
         
         // Update results screen
@@ -445,12 +521,17 @@ function saveRecord(record) {
     const records = JSON.parse(localStorage.getItem('clashOfCardsRecords') || '[]');
     records.push(record);
     
-    // Sort by time (ascending)
-    records.sort((a, b) => a.time - b.time);
+    // Sort by time (ascending) for timed mode
+    records.sort((a, b) => {
+        if (a.mode === 'timed' && b.mode === 'timed') {
+            return a.time - b.time;
+        }
+        return 0;
+    });
     
-    // Keep only top 50 records
-    if (records.length > 50) {
-        records.length = 50;
+    // Keep only top 20 records
+    if (records.length > 20) {
+        records.length = 20;
     }
     
     localStorage.setItem('clashOfCardsRecords', JSON.stringify(records));
@@ -477,12 +558,15 @@ function displayRecords() {
         const minutes = Math.floor(record.time / 60);
         const seconds = record.time % 60;
         const timeStr = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        const modeText = record.mode === 'classic' ? 
+            (gameState.settings.language === 'ru' ? 'Классический' : 'Classic') : 
+            (gameState.settings.language === 'ru' ? 'На время' : 'Timed');
         
         html += `
             <div class="record-item">
-                <div style="font-size: 1.5rem; font-weight: bold; color: ${index < 3 ? 'gold' : '#fff'}">#${index + 1}</div>
+                <div style="font-size: 1.5rem; font-weight: bold; color: ${index < 3 ? '#ffd700' : '#fff'}">#${index + 1}</div>
                 <div style="font-size: 1.2rem;">${record.name}</div>
-                <div>${timeStr}</div>
+                <div><strong>${timeStr}</strong><br><small>${modeText}</small></div>
                 <div>${date.toLocaleDateString(gameState.settings.language === 'ru' ? 'ru-RU' : 'en-US')}</div>
             </div>
         `;
@@ -565,14 +649,6 @@ function updateVolume() {
     const volume = parseInt(document.getElementById('volumeSlider').value);
     gameState.settings.volume = volume;
     document.getElementById('volumeValue').textContent = volume;
-    
-    // Update sounds volume
-    Object.values(gameState.sounds).forEach(sound => {
-        if (sound) {
-            sound.volume = volume / 100;
-        }
-    });
-    
     saveSettings();
 }
 
@@ -586,89 +662,47 @@ function updateLanguage() {
     const lang = gameState.settings.language;
     const t = texts[lang];
     
-    // Update all text elements
-    document.querySelectorAll('[data-lang]').forEach(element => {
-        const key = element.dataset.lang;
-        if (t[key]) {
-            element.textContent = t[key];
-        }
-    });
-    
     // Update specific elements
-    const gameTitle = document.querySelector('.game-title');
-    if (gameTitle) gameTitle.textContent = t.gameTitle;
+    const subtitle = document.querySelector('.subtitle');
+    if (subtitle) subtitle.textContent = t.author;
     
-    const author = document.querySelector('.author');
-    if (author) author.textContent = t.author;
+    // Update buttons in main menu
+    const playBtn = document.querySelector('.menu-buttons .btn:nth-child(1)');
+    if (playBtn) playBtn.innerHTML = `<i class="fas fa-play-circle"></i> ${t.play}`;
     
-    // Update buttons and other texts
-    document.querySelectorAll('.btn').forEach(btn => {
-        const icon = btn.querySelector('i');
-        const btnText = btn.textContent.trim();
-        
-        if (btnText.includes('Играть') || btnText.includes('Play')) {
-            btn.innerHTML = `<i class="${icon?.className || 'fas fa-play-circle'}"></i> ${t.play}`;
-        } else if (btnText.includes('Рекорды') || btnText.includes('Records')) {
-            btn.innerHTML = `<i class="${icon?.className || 'fas fa-trophy'}"></i> ${t.records}`;
-        } else if (btnText.includes('Настройки') || btnText.includes('Settings')) {
-            btn.innerHTML = `<i class="${icon?.className || 'fas fa-cog'}"></i> ${t.settings}`;
-        } else if (btnText.includes('Назад') || btnText.includes('Back')) {
-            btn.innerHTML = `<i class="${icon?.className || 'fas fa-arrow-left'}"></i> ${t.back}`;
-        }
-    });
-}
-
-// Sound functions
-function createSounds() {
-    // Create simple sounds using Web Audio API
-    try {
-        const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-        
-        // Flip sound
-        gameState.sounds.flip = createBeepSound(audioContext, 800, 0.1);
-        
-        // Match sound
-        gameState.sounds.match = createBeepSound(audioContext, 1200, 0.3);
-        
-        // Win sound
-        gameState.sounds.win = createBeepSound(audioContext, 1500, 0.5);
-        
-        // Hint sound
-        gameState.sounds.hint = createBeepSound(audioContext, 600, 0.2);
-        
-    } catch (e) {
-        console.log("Audio not supported:", e);
-    }
-}
-
-function createBeepSound(audioContext, frequency, duration) {
-    const oscillator = audioContext.createOscillator();
-    const gainNode = audioContext.createGain();
+    const recordsBtn = document.querySelector('.menu-buttons .btn:nth-child(2)');
+    if (recordsBtn) recordsBtn.innerHTML = `<i class="fas fa-trophy"></i> ${t.records}`;
     
-    oscillator.connect(gainNode);
-    gainNode.connect(audioContext.destination);
+    const settingsBtn = document.querySelector('.menu-buttons .btn:nth-child(3)');
+    if (settingsBtn) settingsBtn.innerHTML = `<i class="fas fa-cog"></i> ${t.settings}`;
     
-    oscillator.frequency.value = frequency;
-    oscillator.type = 'sine';
+    // Update back button
+    const backBtn = document.querySelector('.btn-back');
+    if (backBtn) backBtn.innerHTML = `<i class="fas fa-arrow-left"></i> ${t.back}`;
     
-    gainNode.gain.setValueAtTime(0, audioContext.currentTime);
-    gainNode.gain.linearRampToValueAtTime(0.3 * (gameState.settings.volume / 100), audioContext.currentTime + 0.01);
-    gainNode.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + duration);
+    // Update mode selection
+    const modeTitle = document.querySelector('.mode-title');
+    if (modeTitle) modeTitle.textContent = t.selectMode;
     
-    oscillator.start(audioContext.currentTime);
-    oscillator.stop(audioContext.currentTime + duration);
+    // Update game settings
+    const settingsTitle = document.querySelector('.settings-title');
+    if (settingsTitle) settingsTitle.textContent = t.gameSettings;
     
-    return {volume: gameState.settings.volume / 100};
-}
-
-function playSound(soundName) {
-    if (gameState.settings.volume === 0) return;
+    // Update results screen
+    const resultsTitle = document.querySelector('.results-title');
+    if (resultsTitle) resultsTitle.textContent = t.gameComplete;
     
-    const sound = gameState.sounds[soundName];
-    if (sound) {
-        // For simplicity, we'll just recreate the sound
-        createSounds();
-    }
+    // Update records screen
+    const recordsTitle = document.querySelector('.records-title');
+    if (recordsTitle) recordsTitle.textContent = t.recordsTitle;
+    
+    // Update settings screen
+    const settingsScreenTitle = document.querySelector('#settingsScreen .settings-title');
+    if (settingsScreenTitle) settingsScreenTitle.textContent = t.settingsTitle;
+    
+    // Update social media title
+    const socialTitle = document.querySelector('.social-title');
+    if (socialTitle) socialTitle.textContent = t.social;
 }
 
 // Utility functions
